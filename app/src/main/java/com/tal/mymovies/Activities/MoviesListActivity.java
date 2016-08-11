@@ -20,9 +20,9 @@ import com.tal.mymovies.Adapters.MoviesListAdapter;
 import com.tal.mymovies.Moduls.Movie;
 import com.tal.mymovies.Network.ApiManager;
 import com.tal.mymovies.R;
-import com.tal.mymovies.Service.ApiService;
-import com.tal.mymovies.Service.ApiThread;
-import com.tal.mymovies.Service.MyResultReceiver;
+import com.tal.mymovies.Services.ApiService;
+import com.tal.mymovies.Services.ApiThread;
+import com.tal.mymovies.Services.MyResultReceiver;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -57,8 +57,7 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
     ///////////////////////////////service//////////////////////////////////////////
 
     private void serviceButton(){
-        resultReceiver = new MyResultReceiver(new Handler());
-        resultReceiver.setReceiver(this);
+        resultReceiver = new MyResultReceiver(new Handler(), this);
         Button serviceBtn = (Button) findViewById(R.id.service);
 
         if (serviceBtn != null) {
