@@ -8,39 +8,53 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.tal.mymovies.moviesList">
+    tools:context=".Activities.MoviesListActivity">
 
-
-    <TextView
-        android:id="@+id/movies_list_title"
+    <ImageView
+        android:id="@+id/movies_list_icon"
+        android:src="@drawable/logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginLeft="20dp"
         android:text="@string/title_activity_movies_list"
-        android:textColor="@color/abc_search_url_text_pressed"
-        android:textSize="30sp"
-        android:textStyle="bold" />
+        android:layout_marginBottom="20dp"
+        />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
         <Button
-            android:id="@+id/handler_post_button"
+            android:id="@+id/handler"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Handler post"
-            android:textSize="12sp" />
+            android:text="Handler"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="20dp"
+            android:background="#83bbe6"
+            android:allowUndo="true" />
 
         <Button
-            android:id="@+id/handler_service_button"
+            android:id="@+id/handlerPost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Serch by handler"
-            android:textSize="12sp" />
+            android:layout_toRightOf="@id/handler"
+            android:text="Handler Post"
+            android:layout_marginRight="10dp"
+            android:background="#83bbe6" />
 
-    </LinearLayout>
+        <Button
+            android:id="@+id/service"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Service"
+            android:layout_toRightOf="@id/handlerPost"
+            android:background="#83bbe6"
+            android:allowUndo="false" />
+
+    </RelativeLayout>
+
 
 
     <RelativeLayout
@@ -52,27 +66,32 @@
             android:id="@+id/searchBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_marginBottom="20dp"
             android:layout_marginTop="20dp"
-            android:layout_toLeftOf="@+id/searchButton"
             android:hint="@string/search_hint"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:textColor="@android:color/black" />
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/searchButton"
+            android:textColor="@android:color/black"
+            android:background="#ffffff"
+            android:textColorHint="#080707" />
 
         <ImageButton
             android:id="@+id/searchButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:background="@android:drawable/ic_search_category_default" />
+            android:background="@android:drawable/ic_search_category_default"
+            android:layout_height="wrap_content" />
     </RelativeLayout>
 
     <ListView
         android:id="@+id/listview"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:divider="#b5b5b5"
+        android:dividerHeight="1dp"
+        android:listSelector="@drawable/list_selector" />
 
 </LinearLayout>

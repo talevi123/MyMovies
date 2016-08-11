@@ -1,5 +1,8 @@
 package com.tal.mymovies.Receivers;
 
+/**
+ * Created by tal on 11/08/16.
+ */
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;

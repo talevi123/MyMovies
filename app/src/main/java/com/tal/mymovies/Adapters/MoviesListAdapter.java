@@ -35,16 +35,19 @@ public class MoviesListAdapter extends ArrayAdapter<Movie> {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = layoutInflater.inflate(R.layout.activity_line_list, parent, false);
 
-        ImageView icon = (ImageView) view.findViewById(R.id.icon);
+        ImageView icon = (ImageView) view.findViewById(R.id.list_image);
         TextView title = (TextView) view.findViewById(R.id.title);
-        TextView description = (TextView) view.findViewById(R.id.description);
+        TextView genre = (TextView) view.findViewById(R.id.genre);
+        TextView duration = (TextView) view.findViewById(R.id.duration);
 
         Movie movie = getItem(position);
         Log.v(TAG, "Position = " + position + " Movie = " + movie.toString());
 
         Picasso.with(context).load(movie.getImageUrl()).into(icon);
         title.setText(movie.getTitle());
-        description.setText(movie.getDescription());
+        genre.setText(movie.getGenre());
+        duration.setText(movie.getDuration());
+
 
         return view;
     }

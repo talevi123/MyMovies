@@ -9,6 +9,6 @@
     <string name="btnRegister">Register New Account</string>
     <string name="title_activity_movies_list">Movies List</string>
     <string name="title_activity_maps">Map</string>
-
-    <string name="search_hint">Please enter your search</string>
+    <string name="title_activity_show_movie">ShowMovie</string>
+    <string name="search_hint">Enter name of movie</string>
 </resources>

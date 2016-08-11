@@ -20,9 +20,9 @@ import com.tal.mymovies.Adapters.MoviesListAdapter;
 import com.tal.mymovies.Moduls.Movie;
 import com.tal.mymovies.Network.ApiManager;
 import com.tal.mymovies.R;
-import com.tal.mymovies.Services.ApiService;
-import com.tal.mymovies.Services.ApiThread;
-import com.tal.mymovies.Services.MyResultReceiver;
+import com.tal.mymovies.Service.ApiService;
+import com.tal.mymovies.Service.ApiThread;
+import com.tal.mymovies.Service.MyResultReceiver;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,24 +38,34 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
     private MyResultReceiver resultReceiver;
     private EditText searchBox;
 
+    //////////////////////////////////////////oncreate//////////////////////////////////////
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies_list);
 
-        final ListView listview = (ListView) findViewById(R.id.listview);
         searchBox = (EditText) findViewById(R.id.searchBox);
-        ImageButton searchBtn = (ImageButton) findViewById(R.id.searchButton);
 
-        if (searchBtn != null) {
-            searchBtn.setOnClickListener(new View.OnClickListener() {
+        serviceButton();
+        handlerServicebutton();
+        handlerPostbutton();
+        asyncTaskButton();
+        asyncTaskButton2();
+    }
+    //////////////////////////////////////////End_oncreate//////////////////////////////////////
+
+    ///////////////////////////////service//////////////////////////////////////////
+
+    private void serviceButton(){
+        resultReceiver = new MyResultReceiver(new Handler());
+        resultReceiver.setReceiver(this);
+        Button serviceBtn = (Button) findViewById(R.id.service);
+
+        if (serviceBtn != null) {
+            serviceBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (searchBox != null && searchBox.getText() != null && searchBox.getText().length() > 0) {
-
-//                        new SearchMoviesTask().execute(searchBox.getText().toString());
-
-
                         Bundle apiServiceBundle = new Bundle();
                         apiServiceBundle.putParcelable(ApiService.KEY_RECEIVER, resultReceiver);
                         apiServiceBundle.putString(ApiService.KEY_API_METHOD, ApiService.REQUEST_SEARCH_MOVIE);
@@ -63,100 +73,122 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
                         Intent serviceIntent = new Intent(MoviesListActivity.this, ApiService.class);
                         serviceIntent.putExtras(apiServiceBundle);
                         startService(serviceIntent);
-
                         closeKeyboard();
                     }
-
                 }
             });
         }
-
-        //SharedPreferences sp = getSharedPreferences("key", 0);
-        //String tValue = sp.getString("textvalue","");
-        //String tOperative = sp.getString("textvalue2","");
-
-        Intent in = getIntent();
-
-        String fullName = in.getStringExtra("full_name");
-        String email = in.getStringExtra("email");
-        String username = in.getStringExtra("username");
-
-        List<Movie> movies = new ArrayList<>();
-
-        adapter = new MoviesListAdapter(this,
-                R.layout.activity_line_list, movies);
-        if (listview != null) {
-            listview.setAdapter(adapter);
-            listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                @Override
-                public void onItemClick(AdapterView<?> parent, final View view,
-                                        int position, long id) {
-                    Movie movie = adapter.getItem(position);
-                    new SearchMoviesTask2().execute(movie.getImdbId());
-                }
-
-            });
-        }
-
-        resultReceiver = new MyResultReceiver(new Handler(), this);
-
-        initHandlerPostButton();
-        initHandlerServiceButton();
     }
 
-    private void initHandlerServiceButton() {
-        final Handler handler = new Handler() {
+    @Override
+    public void onReceiveResult(int resultCode, Bundle resultData) {
+
+        String api_method = resultData.getString(ApiService.KEY_API_METHOD);
+        if(api_method.equals(ApiService.REQUEST_SEARCH_MOVIE)){
+            String jsonarry = resultData.getString(ApiService.KEY_MOVIES);
+            List <Movie> movies = new ArrayList<>();
+            try {
+                JSONArray jsonArray = new JSONArray(jsonarry);
+                for (int i = 0;i < jsonArray.length(); i++){
+                    JSONObject jsonObject = jsonArray.optJSONObject(i);
+                    if(jsonObject != null){
+                        Movie movie = new Movie(jsonObject);
+                        movies.add(movie);
+                    }
+                }
+                adapter.clear();
+                adapter.addAll(movies);
+                adapter.notifyDataSetChanged();
+            }
+            catch (JSONException e){
+
+            }
+
+        }
+
+    }
+    ///////////////////////////////service//////////////////////////////////////////
+
+    //////////////////////////////handler///////////////////////////////////////////
+
+
+    private void handlerPostbutton(){
+        final Handler handler = new Handler();
+        Button handlerPostBtn = (Button) findViewById(R.id.handlerPost);
+        handlerPostBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            // On the main thread
-            public void handleMessage(Message msg) {
-                Bundle data = msg.getData();
-                handlerServerResponse(data);
+            public void onClick(View v) {
+              //  Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(MoviesListActivity.this, "This is a delay message", Toast.LENGTH_SHORT).show();
+                    }
+                },5*1000);
+            }
+        });
+    }
+    ////////////
+
+    private void handlerServicebutton(){
+        final Handler handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg){
+                Bundle bundleData = msg.getData();
+                handlerServerResponse(bundleData);
             }
         };
 
-        Button searchByHandlerButton = (Button) findViewById(R.id.handler_service_button);
-        if (searchByHandlerButton != null) {
-            searchByHandlerButton.setOnClickListener(new View.OnClickListener() {
+        Button handlerBtn = (Button)findViewById(R.id.handler);
+
+        if(handlerBtn != null){
+            handlerBtn.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
-
                     Bundle bundle = new Bundle();
-                    bundle.putParcelable(ApiService.KEY_RECEIVER, resultReceiver);
-                    bundle.putString(ApiService.KEY_API_METHOD, ApiService.REQUEST_SEARCH_MOVIE);
-                    bundle.putString(ApiService.KEY_SEARCH, searchBox.getText().toString());
-                    Intent intent = new Intent(MoviesListActivity.this, ApiService.class);
+                    bundle.putString(ApiThread.KEY_API_METHOD,ApiThread.REQUEST_SEARCH_MOVIE);
+                    bundle.putString(ApiThread.KEY_SEARCH,searchBox.getText().toString());
+                    Intent intent = new Intent(MoviesListActivity.this,ApiThread.class);
                     intent.putExtras(bundle);
 
-                    ApiThread apiThread = new ApiThread(handler, intent);
+                    ApiThread apiThread = new ApiThread(handler,intent);
                     apiThread.start();
                 }
+
+
             });
         }
 
-
     }
 
-    private void initHandlerPostButton() {
-        final Handler handler = new Handler();
-
-        Button postButton = (Button) findViewById(R.id.handler_post_button);
-        if (postButton != null) {
-            postButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(MoviesListActivity.this, "This is a delay message", Toast.LENGTH_SHORT).show();
-                        }
-                    }, 5 * 1000);
+    public void handlerServerResponse(Bundle resultData){
+        String api_method = resultData.getString(ApiThread.KEY_API_METHOD);
+        if(api_method.equals(ApiThread.REQUEST_SEARCH_MOVIE)){
+            String jsonarry = resultData.getString(ApiThread.KEY_MOVIES);
+            List <Movie> movies = new ArrayList<>();
+            try {
+                JSONArray jsonArray = new JSONArray(jsonarry);
+                for (int i = 0;i < jsonArray.length(); i++){
+                    JSONObject jsonObject = jsonArray.optJSONObject(i);
+                    if(jsonObject != null){
+                        Movie movie = new Movie(jsonObject);
+                        movies.add(movie);
+                    }
                 }
-            });
+                adapter.clear();
+                adapter.addAll(movies);
+                adapter.notifyDataSetChanged();
+            }
+            catch (JSONException e){
+
+            }
+
         }
 
     }
+    //////////////////////////////handler///////////////////////////////////////////
 
+    //////////////////////////////////////////closeKeyboard//////////////////////////////////////
     private void closeKeyboard() {
         View view = this.getCurrentFocus();
         if (view != null) {
@@ -164,42 +196,29 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
+    //////////////////////////////////////////closeKeyboard//////////////////////////////////////
 
     @Override
     protected void onStart() {
         super.onStart();
     }
 
-    @Override
-    public void onReceiveResult(int resultCode, Bundle resultData) {
-        handlerServerResponse(resultData);
-    }
+    //////////////////////////////////////////AsyncTask//////////////////////////////////////
 
-    private void handlerServerResponse(Bundle resultData) {
-        String apiMethod = resultData.getString(ApiService.KEY_API_METHOD);
-        if (apiMethod.equals(ApiService.REQUEST_SEARCH_MOVIE)) {
-            List<Movie> movieList = new ArrayList<>();
-            try {
-                String jsonArrayString = resultData.getString(ApiService.KEY_MOVIES);
-                JSONArray searchJsonArray = new JSONArray(jsonArrayString);
-                for (int i = 0; i < searchJsonArray.length(); i++) {
-                    JSONObject movieJson = searchJsonArray.optJSONObject(i);
-                    if (movieJson != null) {
-                        Movie movie = new Movie(movieJson);
-                        movieList.add(movie);
+    private void  asyncTaskButton() {
+        ImageButton searchBtn = (ImageButton) findViewById(R.id.searchButton);
+        if (searchBtn != null) {
+            searchBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (searchBox != null && searchBox.getText() != null && searchBox.getText().length() > 0) {
+                        new SearchMoviesTask().execute(searchBox.getText().toString());
+                        closeKeyboard();
                     }
                 }
-
-                adapter.clear();
-                adapter.addAll(movieList);
-                adapter.notifyDataSetChanged();
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            });
         }
     }
-
     public class SearchMoviesTask extends AsyncTask<String, Void, List<Movie>> {
 
         @Override
@@ -217,6 +236,27 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
         }
     }
 
+    /////////////////////
+
+    private void  asyncTaskButton2() {
+        final ListView listview = (ListView) findViewById(R.id.listview);
+        List<Movie> movies = new ArrayList<>();
+        adapter = new MoviesListAdapter(this, R.layout.activity_line_list, movies);
+
+        if (listview != null) {
+            listview.setAdapter(adapter);
+
+            listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                @Override
+                public void onItemClick(AdapterView<?> parent, final View view,
+                                        int position, long id) {
+                    Movie n = (Movie) (listview.getItemAtPosition(position));
+                    new SearchMoviesTask2().execute(n.getimdbId());
+                }
+            });
+        }
+    }
     public class SearchMoviesTask2 extends AsyncTask<String, Void, Movie> {
 
         @Override
@@ -226,13 +266,13 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
 
         @Override
         protected void onPostExecute(Movie m) {
-            Intent intent = new Intent(MoviesListActivity.this, Movie.class);
+            Intent intent = new Intent(MoviesListActivity.this, MovieActivity.class);
             intent.putExtra("title", m.getTitle());
             intent.putExtra("description", m.getDescription());
             intent.putExtra("imageUrl", m.getImageUrl());
+            startActivity(intent);
         }
     }
 
+    //////////////////////////////////////////AsyncTask//////////////////////////////////////
 }
-
-

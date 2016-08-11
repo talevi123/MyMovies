@@ -16,7 +16,6 @@ public class ApiManager {
 
     private static final String BASE_URL = "http://www.omdbapi.com/?";
     private static final String PARAM_S = "s=";
-    private static final String PARAM_T = "t=";
     private static final String PARAM_I = "i=";
     private static final String URL_SUFFIX = "&r=json&type=movie";
 
@@ -42,8 +41,8 @@ public class ApiManager {
         return null;
     }
 
-    public static Movie findMovie(String id) {
-        String searchResultJson = ConnectionManager.sendGetRequest(BASE_URL + PARAM_I + id + URL_SUFFIX);
+    public static Movie findMovie(String title) {
+        String searchResultJson = ConnectionManager.sendGetRequest(BASE_URL + PARAM_I + title + URL_SUFFIX);
         if (searchResultJson != null) {
             try {
                 JSONObject searchJsonObject = new JSONObject(searchResultJson);

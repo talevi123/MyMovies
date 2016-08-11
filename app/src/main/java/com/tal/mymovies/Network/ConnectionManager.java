@@ -21,7 +21,7 @@ public class ConnectionManager {
         String result = null;
 
         try {
-            URL mUrl = new URL(url.replace(" ", "%20"));
+            URL mUrl = new URL(url);
             HttpURLConnection conn = (HttpURLConnection) mUrl.openConnection();
             conn.setRequestMethod("GET");
             conn.setDoInput(true);

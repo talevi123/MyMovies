@@ -8,50 +8,65 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.tal.mymovies.MainActivity">
+    tools:context=".Activities.LoginActivity"
+    android:background="#336ce0">
 
-    <TextView
-        android:id="@+id/title"
+    <ImageView
+        android:src="@drawable/logo1"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/login"
-        android:layout_gravity="center"
-        android:textColor="@android:color/black"
-        android:textSize="30sp"/>
+        android:layout_height="72dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
+        android:layout_gravity="center"/>
 
-    <EditText
-        android:id="@+id/username"
-        android:layout_width="wrap_content"
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:hint="@string/username"
-        android:inputType="text"
-        android:textSize="30sp"/>
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp">
+        <EditText
+            android:id="@+id/username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/username"
+            android:inputType="text"
+            android:textSize="20sp"
+            android:backgroundTint="#ffffff"
+            android:textIsSelectable="false" />
+    </android.support.design.widget.TextInputLayout>
 
-    <EditText
-        android:id="@+id/password"
-        android:layout_width="wrap_content"
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:hint="@string/password"
-        android:inputType="numberPassword"
-        android:textSize="30sp"/>
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp">
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/password"
+            android:inputType="numberPassword"
+            android:textSize="20sp"
+            android:backgroundTint="#ffffff" />
+    </android.support.design.widget.TextInputLayout>
 
     <Button
         android:id="@+id/login_button"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/login"
-        android:paddingBottom="10sp"
-        />
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp"
+        android:padding="12dp"
+        android:text="Login"
+        android:backgroundTint="#4b93ed" />
 
-    <Button
-        android:id="@+id/main_register_button"
-        android:layout_width="wrap_content"
+    <TextView android:id="@+id/link_signup"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/title_activity_register"
-        />
+        android:layout_marginBottom="24dp"
+        android:text="No account yet? Create one"
+        android:gravity="center"
+        android:textSize="16dip"/>
+
 
 </LinearLayout>
