@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">My Movies</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="username">Username</string>
+    <string name="title_activity_register">Register</string>
+    <string name="full_name">Full Name</string>
+    <string name="email">Email</string>
+    <string name="btnRegister">Register New Account</string>
+    <string name="title_activity_movies_list">Movies List</string>
+    <string name="title_activity_maps">Map</string>
+
+    <string name="search_hint">Please enter your search</string>
+</resources>
