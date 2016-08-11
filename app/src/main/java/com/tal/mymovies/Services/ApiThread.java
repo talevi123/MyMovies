@@ -1,13 +1,9 @@
 package com.tal.mymovies.Services;
 
-import android.app.Activity;
-import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Message;
-import android.os.ResultReceiver;
 
 import com.tal.mymovies.Moduls.Movie;
 import com.tal.mymovies.Network.ApiManager;
@@ -31,15 +27,15 @@ public class ApiThread extends Thread {
     Handler handler;
     private String searchParam;
 
-    public ApiThread(Handler handler, Intent intent) {
-        initIntent(intent);
+    public ApiThread(Handler handler, Bundle bundle) {
+        initBundle(bundle);
         this.handler = handler;
     }
 
-    private void initIntent(Intent intent) {
-        if (intent != null) {
-            if (intent.getStringExtra(KEY_API_METHOD).equals(REQUEST_SEARCH_MOVIE)) {
-                searchParam = intent.getStringExtra(KEY_SEARCH);
+    private void initBundle(Bundle bundle) {
+        if (bundle != null) {
+            if (bundle.getString(KEY_API_METHOD).equals(REQUEST_SEARCH_MOVIE)) {
+                searchParam = bundle.getString(KEY_SEARCH);
             }
         }
     }

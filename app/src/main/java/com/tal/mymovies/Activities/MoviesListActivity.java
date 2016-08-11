@@ -56,7 +56,7 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
 
     ///////////////////////////////service//////////////////////////////////////////
 
-    private void serviceButton(){
+    private void serviceButton() {
         resultReceiver = new MyResultReceiver(new Handler(), this);
         Button serviceBtn = (Button) findViewById(R.id.service);
 
@@ -83,14 +83,14 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
     public void onReceiveResult(int resultCode, Bundle resultData) {
 
         String api_method = resultData.getString(ApiService.KEY_API_METHOD);
-        if(api_method.equals(ApiService.REQUEST_SEARCH_MOVIE)){
+        if (api_method.equals(ApiService.REQUEST_SEARCH_MOVIE)) {
             String jsonarry = resultData.getString(ApiService.KEY_MOVIES);
-            List <Movie> movies = new ArrayList<>();
+            List<Movie> movies = new ArrayList<>();
             try {
                 JSONArray jsonArray = new JSONArray(jsonarry);
-                for (int i = 0;i < jsonArray.length(); i++){
+                for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.optJSONObject(i);
-                    if(jsonObject != null){
+                    if (jsonObject != null) {
                         Movie movie = new Movie(jsonObject);
                         movies.add(movie);
                     }
@@ -98,8 +98,7 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
                 adapter.clear();
                 adapter.addAll(movies);
                 adapter.notifyDataSetChanged();
-            }
-            catch (JSONException e){
+            } catch (JSONException e) {
 
             }
 
@@ -111,46 +110,44 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
     //////////////////////////////handler///////////////////////////////////////////
 
 
-    private void handlerPostbutton(){
+    private void handlerPostbutton() {
         final Handler handler = new Handler();
         Button handlerPostBtn = (Button) findViewById(R.id.handlerPost);
         handlerPostBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              //  Handler handler = new Handler();
+                //  Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         Toast.makeText(MoviesListActivity.this, "This is a delay message", Toast.LENGTH_SHORT).show();
                     }
-                },5*1000);
+                }, 5 * 1000);
             }
         });
     }
     ////////////
 
-    private void handlerServicebutton(){
-        final Handler handler = new Handler(){
+    private void handlerServicebutton() {
+        final Handler handler = new Handler() {
             @Override
-            public void handleMessage(Message msg){
+            public void handleMessage(Message msg) {
                 Bundle bundleData = msg.getData();
                 handlerServerResponse(bundleData);
             }
         };
 
-        Button handlerBtn = (Button)findViewById(R.id.handler);
+        Button handlerBtn = (Button) findViewById(R.id.handler);
 
-        if(handlerBtn != null){
-            handlerBtn.setOnClickListener(new View.OnClickListener(){
+        if (handlerBtn != null) {
+            handlerBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Bundle bundle = new Bundle();
-                    bundle.putString(ApiThread.KEY_API_METHOD,ApiThread.REQUEST_SEARCH_MOVIE);
-                    bundle.putString(ApiThread.KEY_SEARCH,searchBox.getText().toString());
-                    Intent intent = new Intent(MoviesListActivity.this,ApiThread.class);
-                    intent.putExtras(bundle);
+                    bundle.putString(ApiThread.KEY_API_METHOD, ApiThread.REQUEST_SEARCH_MOVIE);
+                    bundle.putString(ApiThread.KEY_SEARCH, searchBox.getText().toString());
 
-                    ApiThread apiThread = new ApiThread(handler,intent);
+                    ApiThread apiThread = new ApiThread(handler, bundle);
                     apiThread.start();
                 }
 
@@ -160,16 +157,16 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
 
     }
 
-    public void handlerServerResponse(Bundle resultData){
+    public void handlerServerResponse(Bundle resultData) {
         String api_method = resultData.getString(ApiThread.KEY_API_METHOD);
-        if(api_method.equals(ApiThread.REQUEST_SEARCH_MOVIE)){
+        if (api_method.equals(ApiThread.REQUEST_SEARCH_MOVIE)) {
             String jsonarry = resultData.getString(ApiThread.KEY_MOVIES);
-            List <Movie> movies = new ArrayList<>();
+            List<Movie> movies = new ArrayList<>();
             try {
                 JSONArray jsonArray = new JSONArray(jsonarry);
-                for (int i = 0;i < jsonArray.length(); i++){
+                for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.optJSONObject(i);
-                    if(jsonObject != null){
+                    if (jsonObject != null) {
                         Movie movie = new Movie(jsonObject);
                         movies.add(movie);
                     }
@@ -177,8 +174,7 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
                 adapter.clear();
                 adapter.addAll(movies);
                 adapter.notifyDataSetChanged();
-            }
-            catch (JSONException e){
+            } catch (JSONException e) {
 
             }
 
@@ -204,7 +200,7 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
 
     //////////////////////////////////////////AsyncTask//////////////////////////////////////
 
-    private void  asyncTaskButton() {
+    private void asyncTaskButton() {
         ImageButton searchBtn = (ImageButton) findViewById(R.id.searchButton);
         if (searchBtn != null) {
             searchBtn.setOnClickListener(new View.OnClickListener() {
@@ -218,6 +214,7 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
             });
         }
     }
+
     public class SearchMoviesTask extends AsyncTask<String, Void, List<Movie>> {
 
         @Override
@@ -237,7 +234,7 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
 
     /////////////////////
 
-    private void  asyncTaskButton2() {
+    private void asyncTaskButton2() {
         final ListView listview = (ListView) findViewById(R.id.listview);
         List<Movie> movies = new ArrayList<>();
         adapter = new MoviesListAdapter(this, R.layout.activity_line_list, movies);
@@ -256,6 +253,7 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
             });
         }
     }
+
     public class SearchMoviesTask2 extends AsyncTask<String, Void, Movie> {
 
         @Override
