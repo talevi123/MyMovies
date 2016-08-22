@@ -11,4 +11,25 @@
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_show_movie">ShowMovie</string>
     <string name="search_hint">Enter name of movie</string>
+
+    <string name="apps_name">Slider Menu</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="drawer_open">Slider Menu Opened</string>
+    <string name="drawer_close">Slider Menu Closed</string>
+
+    <string-array name="nav_drawer_items">
+        <item >Home</item>
+        <item >Movie</item>
+        <item >Search</item>
+    </string-array>
+
+    <array name="nav_drawer_icons">
+        <item>@drawable/ic_home</item>
+        <item>@drawable/ic_movie</item>
+        <item>@drawable/ic_search</item>
+    </array>
+
+    <string name="desc_list_item_icon">Item Icon</string>
+
 </resources>

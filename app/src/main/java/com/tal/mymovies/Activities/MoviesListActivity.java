@@ -1,5 +1,6 @@
 package com.tal.mymovies.Activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -37,6 +38,8 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
     private MoviesListAdapter adapter;
     private MyResultReceiver resultReceiver;
     private EditText searchBox;
+    ProgressDialog progressDialog;
+
 
     //////////////////////////////////////////oncreate//////////////////////////////////////
     @Override
@@ -64,6 +67,7 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
             serviceBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    progressDialog = ProgressDialog.show(MoviesListActivity.this, "", "Loading...");
                     if (searchBox != null && searchBox.getText() != null && searchBox.getText().length() > 0) {
                         Bundle apiServiceBundle = new Bundle();
                         apiServiceBundle.putParcelable(ApiService.KEY_RECEIVER, resultReceiver);
@@ -101,7 +105,7 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
             } catch (JSONException e) {
 
             }
-
+            progressDialog.dismiss();
         }
 
     }
@@ -117,12 +121,14 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
             @Override
             public void onClick(View v) {
                 //  Handler handler = new Handler();
+                progressDialog = ProgressDialog.show(MoviesListActivity.this, "", "Loading...");
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         Toast.makeText(MoviesListActivity.this, "This is a delay message", Toast.LENGTH_SHORT).show();
                     }
                 }, 5 * 1000);
+                progressDialog.dismiss();
             }
         });
     }
@@ -143,6 +149,7 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
             handlerBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    progressDialog = ProgressDialog.show(MoviesListActivity.this, "", "Loading...");
                     Bundle bundle = new Bundle();
                     bundle.putString(ApiThread.KEY_API_METHOD, ApiThread.REQUEST_SEARCH_MOVIE);
                     bundle.putString(ApiThread.KEY_SEARCH, searchBox.getText().toString());
@@ -177,7 +184,7 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
             } catch (JSONException e) {
 
             }
-
+            progressDialog.dismiss();
         }
 
     }
@@ -206,6 +213,7 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
             searchBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    progressDialog = ProgressDialog.show(MoviesListActivity.this, "", "Loading...");
                     if (searchBox != null && searchBox.getText() != null && searchBox.getText().length() > 0) {
                         new SearchMoviesTask().execute(searchBox.getText().toString());
                         closeKeyboard();
@@ -228,6 +236,7 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
                 adapter.clear();
                 adapter.addAll(movies);
                 adapter.notifyDataSetChanged();
+                progressDialog.dismiss();
             }
         }
     }
@@ -247,6 +256,7 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
                 @Override
                 public void onItemClick(AdapterView<?> parent, final View view,
                                         int position, long id) {
+                    progressDialog = ProgressDialog.show(MoviesListActivity.this, "", "Loading...");
                     Movie n = (Movie) (listview.getItemAtPosition(position));
                     new SearchMoviesTask2().execute(n.getimdbId());
                 }
@@ -268,6 +278,7 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
             intent.putExtra("description", m.getDescription());
             intent.putExtra("imageUrl", m.getImageUrl());
             startActivity(intent);
+            progressDialog.dismiss();
         }
     }
 

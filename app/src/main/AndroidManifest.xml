@@ -27,7 +27,7 @@
         <activity android:name=".Activities.RegisterActivity" />
         <activity android:name=".Activities.MoviesListActivity" />
         <activity android:name=".Activities.MovieActivity" />
-
+        <activity android:name=".Activities.Main2Activity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -39,7 +39,7 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-        <service android:name=".Service.ApiService"
+        <service android:name=".Services.ApiService"
             android:enabled="true"
             android:exported="true"/>
         <receiver android:name=".Receivers.NetworkReceiver" android:enabled="true" android:exported="true">
