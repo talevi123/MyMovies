@@ -38,7 +38,6 @@ public class MoviesListAdapter extends ArrayAdapter<Movie> {
         ImageView icon = (ImageView) view.findViewById(R.id.list_image);
         TextView title = (TextView) view.findViewById(R.id.title);
         TextView genre = (TextView) view.findViewById(R.id.genre);
-        TextView duration = (TextView) view.findViewById(R.id.duration);
 
         Movie movie = getItem(position);
         Log.v(TAG, "Position = " + position + " Movie = " + movie.toString());
@@ -46,7 +45,7 @@ public class MoviesListAdapter extends ArrayAdapter<Movie> {
         Picasso.with(context).load(movie.getImageUrl()).into(icon);
         title.setText(movie.getTitle());
         genre.setText(movie.getGenre());
-        duration.setText(movie.getDuration());
+
 
 
         return view;

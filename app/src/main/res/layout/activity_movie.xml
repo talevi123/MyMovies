@@ -2,45 +2,135 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#0b0a0a">
 
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="40sp"
-        android:gravity="center"
         android:singleLine="true"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="2dp"
         android:text="Title"
-        android:textSize="20sp"
-        android:background="#2f2e2e"
-        android:textColor="#ffffff" />
+        android:textSize="30sp"
+        android:textColor="#2b72b0" />
+
+    <View
+        android:background="#736868"
+        android:layout_height="1dp"
+        android:layout_width="fill_parent"
+        android:layout_marginBottom="10dp"/>
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/icon"
             android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_height="150dp"
             android:layout_alignParentLeft="true"
-            android:background="#5a2828" />
+            android:src="@drawable/download"
+            android:background="#cb9696"/>
 
         <TextView
-            android:id="@+id/description"
+            android:id="@+id/director"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="This is a description"
-            android:layout_alignParentRight="true"
             android:layout_toRightOf="@id/icon"
-            android:textSize="20sp" />
+            android:layout_marginLeft="10dp"
+            android:text="director (2015)"
+            android:textSize="20sp"
+            android:textColor="#f9f2f2" />
+
+        <TextView
+            android:id="@+id/genre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/director"
+            android:layout_toRightOf="@id/icon"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="3dp"
+            android:text="english"
+            android:textSize="15sp"
+            android:textColor="#c1acac" />
+
+        <TextView
+            android:id="@+id/min"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/genre"
+            android:layout_toRightOf="@id/icon"
+            android:layout_marginLeft="10dp"
+            android:text="100 min"
+            android:textSize="15sp"
+            android:textColor="#c1acac" />
+
+        <RatingBar
+            android:id="@+id/ratingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/icon"
+            android:layout_above="@id/imd"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:numStars="5"
+            android:stepSize="0.5"
+            android:rating="4.0"
+            style="?android:attr/ratingBarStyleSmall"
+            android:progressTint="#c9d729"
+            android:progressBackgroundTint="#faf3f3" />
+
+        <ImageView
+            android:id="@+id/imd"
+            android:src="@drawable/im"
+            android:layout_width="50dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_alignBottom="@+id/icon"
+            android:layout_toRightOf="@+id/icon"/>
+
+        <TextView
+            android:id="@+id/r"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="8.4"
+            android:layout_alignBottom="@+id/icon"
+            android:layout_toRightOf="@+id/imd"
+            android:textSize="15sp"
+            android:textColor="#f9f2f2"/>
+
+        <ImageView
+            android:id="@+id/eye"
+            android:src="@drawable/timthumb"
+            android:layout_width="30dp"
+            android:layout_height="20dp"
+            android:layout_alignBottom="@+id/icon"
+            android:layout_toRightOf="@+id/r"/>
 
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/titlePlot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="Plot"
+        android:textSize="20sp"
+        android:textColor="#2b72b0" />
+
+    <TextView
+        android:id="@+id/plot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="This plot"
+        android:textSize="15sp"
+        android:textColor="#f9f2f2" />
+
 
 </LinearLayout>

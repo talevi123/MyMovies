@@ -14,8 +14,10 @@ public class Movie  {
     public String imageUrl;
     public String duration;
     public String year;
+    public String director;
     public String imdbId;
     public String genre;
+    public String rating;
 
 
     public Movie(int id, String title, String description, String imageUrl, long duration) {
@@ -23,7 +25,6 @@ public class Movie  {
         this.title = title;
         this.description = description;
         this.imageUrl = imageUrl;
-        this.description = description;
     }
 
     public Movie(JSONObject jsonObject) {
@@ -32,8 +33,10 @@ public class Movie  {
         imdbId = jsonObject.optString("imdbID");
         imageUrl = jsonObject.optString("Poster");
         description = jsonObject.optString("Plot");
+        director = jsonObject.optString("Director");
         duration = jsonObject.optString("Runtime");
         genre = jsonObject.optString("Genre");
+        rating = jsonObject.optString("imdbRating");
     }
 
 
@@ -64,6 +67,20 @@ public class Movie  {
     public String getimdbId() {
         return imdbId;
     }
+
+    public String getDirector() {
+        return director;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public String getRating() {
+        return rating;
+    }
+
+
 
     @Override
     public String toString() {
