@@ -1,14 +1,22 @@
 package com.tal.mymovies.Activities;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -22,6 +30,7 @@ import com.tal.mymovies.Adapters.MoviesListAdapter;
 import com.tal.mymovies.Moduls.Movie;
 import com.tal.mymovies.Network.ApiManager;
 import com.tal.mymovies.R;
+import com.tal.mymovies.Services.ApiBroadcastThread;
 import com.tal.mymovies.Services.ApiService;
 import com.tal.mymovies.Services.ApiThread;
 import com.tal.mymovies.Services.MyResultReceiver;
@@ -36,12 +45,19 @@ import java.util.List;
 public class MoviesListActivity extends AppCompatActivity implements MyResultReceiver.Receiver {
 
     private static final String TAG = "MoviesListActivity";
+
+    public static final String EVENT_NETWORK_DATA_READY = "com.tal.mymovies.NETWORK_DATA_READY";
+
     private MoviesListAdapter adapter;
     private MyResultReceiver resultReceiver;
     private EditText searchBox;
     ProgressDialog progressDialog;
-    private static SharedPreferences sharedpreferences;
-    public static final String MyPREFERENCES = "MyPrefs" ;
+
+    private BroadcastReceiver listDataBradcastReceiver;
+    private Toolbar toolbar;
+    private DrawerLayout myDrawer;
+    private NavigationView naView;
+
 
     //////////////////////////////////////////oncreate//////////////////////////////////////
     @Override
@@ -50,14 +66,101 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
         setContentView(R.layout.activity_movies_list);
 
         searchBox = (EditText) findViewById(R.id.searchBox);
-        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedpreferences.edit();
+
+        initNavigationMenu();
 
         serviceButton();
         handlerServicebutton();
         handlerPostbutton();
         asyncTaskButton();
         asyncTaskButton2();
+        bradcastButton();
+    }
+
+    private void initNavigationMenu() {
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        myDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        naView = (NavigationView) findViewById(R.id.nvView);
+        setupDrawerContent(naView);
+    }
+
+    private void setupDrawerContent(NavigationView navigationView) {
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        selectDrawerItem(menuItem);
+                        return true;
+                    }
+                });
+    }
+
+    public void selectDrawerItem(MenuItem menuItem) {
+
+        switch (menuItem.getItemId()) {
+            case R.id.one:
+                break;
+            case R.id.two:
+                break;
+            case R.id.three:
+                break;
+            default:
+        }
+
+        myDrawer.closeDrawers();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Register ListDataBroadcastReceiver to receive messages.
+        LocalBroadcastManager.getInstance(this).registerReceiver(listDataBradcastReceiver,
+                new IntentFilter(EVENT_NETWORK_DATA_READY));
+    }
+
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(listDataBradcastReceiver);
+        super.onPause();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                myDrawer.openDrawer(GravityCompat.START);
+                return  true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void bradcastButton() {
+
+        listDataBradcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                handlerServerResponse(intent.getExtras());
+            }
+        };
+
+        Button broadcastButton = (Button) findViewById(R.id.broadcast);
+        if (broadcastButton != null) {
+            broadcastButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    progressDialog = ProgressDialog.show(MoviesListActivity.this, "", "Loading...");
+                    Bundle bundle = new Bundle();
+                    bundle.putString(ApiThread.KEY_API_METHOD, ApiThread.REQUEST_SEARCH_MOVIE);
+                    bundle.putString(ApiThread.KEY_SEARCH, searchBox.getText().toString());
+
+                    ApiBroadcastThread apiThread = new ApiBroadcastThread(MoviesListActivity.this, bundle);
+                    apiThread.start();
+                }
+            });
+        }
     }
     //////////////////////////////////////////End_oncreate//////////////////////////////////////
 
@@ -89,7 +192,6 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
 
     @Override
     public void onReceiveResult(int resultCode, Bundle resultData) {
-
         handlerServerResponse(resultData);
     }
     ///////////////////////////////service//////////////////////////////////////////
@@ -100,20 +202,21 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
     private void handlerPostbutton() {
         final Handler handler = new Handler();
         Button handlerPostBtn = (Button) findViewById(R.id.handlerPost);
-        handlerPostBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //  Handler handler = new Handler();
-                progressDialog = ProgressDialog.show(MoviesListActivity.this, "", "Loading...");
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(MoviesListActivity.this, "This is a delay message", Toast.LENGTH_SHORT).show();
-                    }
-                }, 5 * 1000);
-                progressDialog.dismiss();
-            }
-        });
+        if (handlerPostBtn != null) {
+            handlerPostBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    progressDialog = ProgressDialog.show(MoviesListActivity.this, "", "Loading...");
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(MoviesListActivity.this, "This is a delay message", Toast.LENGTH_SHORT).show();
+                        }
+                    }, 5 * 1000);
+                    progressDialog.dismiss();
+                }
+            });
+        }
     }
     ////////////
 
