@@ -27,7 +27,6 @@
         <activity android:name=".Activities.RegisterActivity" />
         <activity android:name=".Activities.MoviesListActivity" />
         <activity android:name=".Activities.MovieActivity" />
-        <activity android:name=".Activities.Main2Activity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").

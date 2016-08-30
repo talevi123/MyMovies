@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -132,7 +131,7 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
         switch (item.getItemId()) {
             case android.R.id.home:
                 myDrawer.openDrawer(GravityCompat.START);
-                return  true;
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -367,6 +366,7 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
             intent.putExtra("year", m.getYear());
             intent.putExtra("min", m.getDuration());
             intent.putExtra("rating", m.getRating());
+            intent.putExtra("imageUrl", m.getImageUrl());
             startActivity(intent);
             progressDialog.dismiss();
         }
