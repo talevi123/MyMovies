@@ -49,8 +49,7 @@
         </receiver>
         <receiver android:name=".Receivers.GpsLocationReceiver">
             <intent-filter>
-                <action android:name="android.location.PROVIDERS_CHANGED" />
-                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="android.location.GPS_ENABLED_CHANGE" />
             </intent-filter>
         </receiver>
     </application>

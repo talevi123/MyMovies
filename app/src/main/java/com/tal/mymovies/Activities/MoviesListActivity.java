@@ -16,14 +16,12 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -56,8 +54,8 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
     private EditText searchBox;
     ProgressDialog progressDialog;
     SharedPreferences sharedPreferences;
-    public static final String MyPREFERENCES = "MyPrefs" ;
-    public static final String MovieList = "nameKey";
+    public static final String MyPREFERENCES = "MyPrefs";
+    public static final String KEY_MOVIES_LIST = "nameKey";
     private Menu menu;
     private BroadcastReceiver listDataBradcastReceiver;
     private Toolbar toolbar;
@@ -75,10 +73,20 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
         searchBox = (EditText) findViewById(R.id.searchBox);
         sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
 
+        initListDataBroadcastReceiver();
         initNavigationMenu();
-        asyncTaskButton();
-        asyncTaskButton2();
+        initSearchButton();
+        initMoviesList();
 
+    }
+
+    private void initListDataBroadcastReceiver() {
+        listDataBradcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                handlerServerResponse(intent.getExtras());
+            }
+        };
     }
 
     //////////////////////////////////////////End_oncreate//////////////////////////////////////
@@ -97,7 +105,7 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
     }
 
     private ActionBarDrawerToggle setupDrawerToggle() {
-        return new ActionBarDrawerToggle(this, myDrawer, toolbar, R.string.drawer_open,  R.string.drawer_close);
+        return new ActionBarDrawerToggle(this, myDrawer, toolbar, R.string.drawer_open, R.string.drawer_close);
     }
 
 
@@ -110,7 +118,7 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
                         return true;
                     }
                 });
-   }
+    }
 
 
     public void selectDrawerItem(MenuItem menuItem) {
@@ -174,13 +182,6 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
 
     private void bradcastButton() {
 
-        listDataBradcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                handlerServerResponse(intent.getExtras());
-            }
-        };
-
         progressDialog = ProgressDialog.show(MoviesListActivity.this, "", "Loading...");
         Bundle bundle = new Bundle();
         bundle.putString(ApiThread.KEY_API_METHOD, ApiThread.REQUEST_SEARCH_MOVIE);
@@ -196,25 +197,16 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
 
     private void serviceButton() {
         resultReceiver = new MyResultReceiver(new Handler(), this);
-        Button serviceBtn = (Button) findViewById(R.id.serviceMenu);
-
-        if (serviceBtn != null) {
-            serviceBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    progressDialog = ProgressDialog.show(MoviesListActivity.this, "", "Loading...");
-                    if (searchBox != null && searchBox.getText() != null && searchBox.getText().length() > 0) {
-                        Bundle apiServiceBundle = new Bundle();
-                        apiServiceBundle.putParcelable(ApiService.KEY_RECEIVER, resultReceiver);
-                        apiServiceBundle.putString(ApiService.KEY_API_METHOD, ApiService.REQUEST_SEARCH_MOVIE);
-                        apiServiceBundle.putString(ApiService.KEY_SEARCH, searchBox.getText().toString());
-                        Intent serviceIntent = new Intent(MoviesListActivity.this, ApiService.class);
-                        serviceIntent.putExtras(apiServiceBundle);
-                        startService(serviceIntent);
-                        closeKeyboard();
-                    }
-                }
-            });
+        progressDialog = ProgressDialog.show(MoviesListActivity.this, "", "Loading...");
+        if (searchBox != null && searchBox.getText() != null && searchBox.getText().length() > 0) {
+            Bundle apiServiceBundle = new Bundle();
+            apiServiceBundle.putParcelable(ApiService.KEY_RECEIVER, resultReceiver);
+            apiServiceBundle.putString(ApiService.KEY_API_METHOD, ApiService.REQUEST_SEARCH_MOVIE);
+            apiServiceBundle.putString(ApiService.KEY_SEARCH, searchBox.getText().toString());
+            Intent serviceIntent = new Intent(MoviesListActivity.this, ApiService.class);
+            serviceIntent.putExtras(apiServiceBundle);
+            startService(serviceIntent);
+            closeKeyboard();
         }
     }
 
@@ -229,22 +221,14 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
 
     private void handlerPostbutton() {
         final Handler handler = new Handler();
-        Button handlerPostBtn = (Button) findViewById(R.id.handlerPostMenu);
-        if (handlerPostBtn != null) {
-            handlerPostBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    progressDialog = ProgressDialog.show(MoviesListActivity.this, "", "Loading...");
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(MoviesListActivity.this, "This is a delay message", Toast.LENGTH_SHORT).show();
-                        }
-                    }, 5 * 1000);
-                    progressDialog.dismiss();
-                }
-            });
-        }
+        progressDialog = ProgressDialog.show(MoviesListActivity.this, "", "Loading...");
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(MoviesListActivity.this, "This is a delay message", Toast.LENGTH_SHORT).show();
+            }
+        }, 5 * 1000);
+        progressDialog.dismiss();
     }
     ////////////
 
@@ -257,56 +241,58 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
             }
         };
 
-        Button handlerBtn = (Button) findViewById(R.id.handlerMenu);
+        progressDialog = ProgressDialog.show(MoviesListActivity.this, "", "Loading...");
+        Bundle bundle = new Bundle();
+        bundle.putString(ApiThread.KEY_API_METHOD, ApiThread.REQUEST_SEARCH_MOVIE);
+        bundle.putString(ApiThread.KEY_SEARCH, searchBox.getText().toString());
 
-        if (handlerBtn != null) {
-            handlerBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    progressDialog = ProgressDialog.show(MoviesListActivity.this, "", "Loading...");
-                    Bundle bundle = new Bundle();
-                    bundle.putString(ApiThread.KEY_API_METHOD, ApiThread.REQUEST_SEARCH_MOVIE);
-                    bundle.putString(ApiThread.KEY_SEARCH, searchBox.getText().toString());
-
-                    ApiThread apiThread = new ApiThread(handler, bundle);
-                    apiThread.start();
-                }
-
-
-            });
-        }
+        ApiThread apiThread = new ApiThread(handler, bundle);
+        apiThread.start();
 
     }
-
-
 
 
     public void handlerServerResponse(Bundle resultData) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         String api_method = resultData.getString(ApiThread.KEY_API_METHOD);
         if (api_method.equals(ApiThread.REQUEST_SEARCH_MOVIE)) {
-            String jsonarry = resultData.getString(ApiThread.KEY_MOVIES);
-            editor.putString(MovieList, jsonarry);
-            editor.commit();
-            List<Movie> movies = new ArrayList<>();
-            try {
-                JSONArray jsonArray = new JSONArray(jsonarry);
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject jsonObject = jsonArray.optJSONObject(i);
-                    if (jsonObject != null) {
-                        Movie movie = new Movie(jsonObject);
-                        movies.add(movie);
-                    }
-                }
-                adapter.clear();
-                adapter.addAll(movies);
-                adapter.notifyDataSetChanged();
-            } catch (JSONException e) {
 
-            }
-            progressDialog.dismiss();
+            String jsonarry = resultData.getString(ApiThread.KEY_MOVIES);
+            editor.putString(KEY_MOVIES_LIST, jsonarry);
+            editor.apply();
+
+            List<Movie> movieList = parseMoviesListJson(jsonarry);
+
+            updateListViewAdapter(movieList);
         }
 
+    }
+
+    private void updateListViewAdapter(List<Movie> movieList) {
+        adapter.clear();
+        adapter.addAll(movieList);
+        adapter.notifyDataSetChanged();
+
+        progressDialog.dismiss();
+    }
+
+    private List<Movie> parseMoviesListJson(String jsonarry) {
+        List<Movie> movies = new ArrayList<>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonarry);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.optJSONObject(i);
+                if (jsonObject != null) {
+                    Movie movie = new Movie(jsonObject);
+                    movies.add(movie);
+                }
+            }
+
+        } catch (JSONException e) {
+
+        }
+
+        return movies;
     }
     //////////////////////////////handler///////////////////////////////////////////
 
@@ -327,7 +313,7 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
 
     //////////////////////////////////////////AsyncTask//////////////////////////////////////
 
-    private void asyncTaskButton() {
+    private void initSearchButton() {
         ImageButton searchBtn = (ImageButton) findViewById(R.id.searchButton);
         if (searchBtn != null) {
             searchBtn.setOnClickListener(new View.OnClickListener() {
@@ -353,19 +339,22 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
         @Override
         protected void onPostExecute(List<Movie> movies) {
             if (movies != null) {
-                adapter.clear();
-                adapter.addAll(movies);
-                adapter.notifyDataSetChanged();
-                progressDialog.dismiss();
+                updateListViewAdapter(movies);
             }
         }
     }
 
     /////////////////////
 
-    private void asyncTaskButton2() {
+    private void initMoviesList() {
         final ListView listview = (ListView) findViewById(R.id.listview);
         List<Movie> movies = new ArrayList<>();
+
+        String savedMoviesList = sharedPreferences.getString(KEY_MOVIES_LIST, null);
+        if (savedMoviesList != null) {
+            movies = parseMoviesListJson(savedMoviesList);
+        }
+
         adapter = new MoviesListAdapter(this, R.layout.activity_line_list, movies);
 
         if (listview != null) {
