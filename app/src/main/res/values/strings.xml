@@ -18,17 +18,7 @@
     <string name="drawer_open">Slider Menu Opened</string>
     <string name="drawer_close">Slider Menu Closed</string>
 
-    <string-array name="nav_drawer_items">
-        <item >Home</item>
-        <item >Movie</item>
-        <item >Search</item>
-    </string-array>
 
-    <array name="nav_drawer_icons">
-        <item>@drawable/ic_home</item>
-        <item>@drawable/ic_movie</item>
-        <item>@drawable/ic_search</item>
-    </array>
 
     <string name="desc_list_item_icon">Item Icon</string>
 

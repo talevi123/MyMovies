@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,8 +14,11 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -51,11 +55,15 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
     private MyResultReceiver resultReceiver;
     private EditText searchBox;
     ProgressDialog progressDialog;
-
+    SharedPreferences sharedPreferences;
+    public static final String MyPREFERENCES = "MyPrefs" ;
+    public static final String MovieList = "nameKey";
+    private Menu menu;
     private BroadcastReceiver listDataBradcastReceiver;
     private Toolbar toolbar;
     private DrawerLayout myDrawer;
     private NavigationView naView;
+    private ActionBarDrawerToggle drawerToggle;
 
 
     //////////////////////////////////////////oncreate//////////////////////////////////////
@@ -65,26 +73,33 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
         setContentView(R.layout.activity_movies_list);
 
         searchBox = (EditText) findViewById(R.id.searchBox);
+        sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
 
         initNavigationMenu();
-
-        serviceButton();
-        handlerServicebutton();
-        handlerPostbutton();
         asyncTaskButton();
         asyncTaskButton2();
-        bradcastButton();
+
     }
+
+    //////////////////////////////////////////End_oncreate//////////////////////////////////////
 
     private void initNavigationMenu() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         myDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerToggle = setupDrawerToggle();
 
+
+        myDrawer.addDrawerListener(drawerToggle);
         naView = (NavigationView) findViewById(R.id.nvView);
         setupDrawerContent(naView);
     }
+
+    private ActionBarDrawerToggle setupDrawerToggle() {
+        return new ActionBarDrawerToggle(this, myDrawer, toolbar, R.string.drawer_open,  R.string.drawer_close);
+    }
+
 
     private void setupDrawerContent(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(
@@ -95,22 +110,53 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
                         return true;
                     }
                 });
-    }
+   }
+
 
     public void selectDrawerItem(MenuItem menuItem) {
 
         switch (menuItem.getItemId()) {
-            case R.id.one:
+            case R.id.handlerMenu:
+                handlerServicebutton();
                 break;
-            case R.id.two:
+            case R.id.serviceMenu:
+                serviceButton();
                 break;
-            case R.id.three:
+            case R.id.handlerPostMenu:
+                handlerPostbutton();
+                break;
+            case R.id.broadcastrecevierMenu:
+                bradcastButton();
                 break;
             default:
         }
 
+
+        setTitle(menuItem.getTitle());
         myDrawer.closeDrawers();
     }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                myDrawer.openDrawer(GravityCompat.START);
+                return true;
+        }
+        if (drawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        drawerToggle.syncState();
+    }
+
+    /////////////////////BradcastReceiver////////////////////////////////////////////////
 
     @Override
     protected void onResume() {
@@ -126,16 +172,6 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
         super.onPause();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                myDrawer.openDrawer(GravityCompat.START);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     private void bradcastButton() {
 
         listDataBradcastReceiver = new BroadcastReceiver() {
@@ -145,29 +181,22 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
             }
         };
 
-        Button broadcastButton = (Button) findViewById(R.id.broadcast);
-        if (broadcastButton != null) {
-            broadcastButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    progressDialog = ProgressDialog.show(MoviesListActivity.this, "", "Loading...");
-                    Bundle bundle = new Bundle();
-                    bundle.putString(ApiThread.KEY_API_METHOD, ApiThread.REQUEST_SEARCH_MOVIE);
-                    bundle.putString(ApiThread.KEY_SEARCH, searchBox.getText().toString());
+        progressDialog = ProgressDialog.show(MoviesListActivity.this, "", "Loading...");
+        Bundle bundle = new Bundle();
+        bundle.putString(ApiThread.KEY_API_METHOD, ApiThread.REQUEST_SEARCH_MOVIE);
+        bundle.putString(ApiThread.KEY_SEARCH, searchBox.getText().toString());
 
-                    ApiBroadcastThread apiThread = new ApiBroadcastThread(MoviesListActivity.this, bundle);
-                    apiThread.start();
-                }
-            });
-        }
+        ApiBroadcastThread apiThread = new ApiBroadcastThread(MoviesListActivity.this, bundle);
+        apiThread.start();
     }
-    //////////////////////////////////////////End_oncreate//////////////////////////////////////
+
+    /////////////////////BradcastReceiver////////////////////////////////////////////////
 
     ///////////////////////////////service//////////////////////////////////////////
 
     private void serviceButton() {
         resultReceiver = new MyResultReceiver(new Handler(), this);
-        Button serviceBtn = (Button) findViewById(R.id.service);
+        Button serviceBtn = (Button) findViewById(R.id.serviceMenu);
 
         if (serviceBtn != null) {
             serviceBtn.setOnClickListener(new View.OnClickListener() {
@@ -200,7 +229,7 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
 
     private void handlerPostbutton() {
         final Handler handler = new Handler();
-        Button handlerPostBtn = (Button) findViewById(R.id.handlerPost);
+        Button handlerPostBtn = (Button) findViewById(R.id.handlerPostMenu);
         if (handlerPostBtn != null) {
             handlerPostBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -228,7 +257,7 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
             }
         };
 
-        Button handlerBtn = (Button) findViewById(R.id.handler);
+        Button handlerBtn = (Button) findViewById(R.id.handlerMenu);
 
         if (handlerBtn != null) {
             handlerBtn.setOnClickListener(new View.OnClickListener() {
@@ -249,10 +278,16 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
 
     }
 
+
+
+
     public void handlerServerResponse(Bundle resultData) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
         String api_method = resultData.getString(ApiThread.KEY_API_METHOD);
         if (api_method.equals(ApiThread.REQUEST_SEARCH_MOVIE)) {
             String jsonarry = resultData.getString(ApiThread.KEY_MOVIES);
+            editor.putString(MovieList, jsonarry);
+            editor.commit();
             List<Movie> movies = new ArrayList<>();
             try {
                 JSONArray jsonArray = new JSONArray(jsonarry);

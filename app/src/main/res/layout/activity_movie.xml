@@ -17,7 +17,7 @@
         android:singleLine="true"
         android:layout_marginBottom="2dp"
         android:text="Title"
-        android:textSize="30sp"
+        android:textSize="25sp"
         android:textColor="#2b72b0" />
 
     <View
@@ -36,7 +36,7 @@
             android:layout_height="150dp"
             android:layout_alignParentLeft="true"
             android:src="@drawable/download"
-            android:background="#cb9696"/>
+            android:background="#e4050505"/>
 
         <TextView
             android:id="@+id/director"
@@ -120,6 +120,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
+        android:layout_gravity="left"
         android:text="Plot"
         android:textSize="20sp"
         android:textColor="#2b72b0" />

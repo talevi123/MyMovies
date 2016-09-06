@@ -2,19 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/one"
+            android:id="@+id/handlerMenu"
             android:icon="@drawable/ic_1"
             android:title="Handler" />
         <item
-            android:id="@+id/two"
+            android:id="@+id/serviceMenu"
             android:icon="@drawable/ic_2"
             android:title="Service" />
         <item
-            android:id="@+id/three"
+            android:id="@+id/handlerPostMenu"
             android:icon="@drawable/ic_3"
             android:title="Handler Post" />
         <item
-            android:id="@+id/four"
+            android:id="@+id/broadcastrecevierMenu"
             android:icon="@drawable/ic_4"
             android:title="Broadcastrecevier" />
     </group>

@@ -31,7 +31,7 @@ public class MovieActivity extends AppCompatActivity {
         String getDescription = i.getStringExtra("description");
         String getImageurl = i.getStringExtra("imageUrl");
         String getDirector = i.getStringExtra("director");
-        String getYear = i.getStringExtra("Year");
+        String getYear = i.getStringExtra("year");
         String getMin = i.getStringExtra("min");
         String getGenre = i.getStringExtra("genre");
         String getRating = i.getStringExtra("rating");

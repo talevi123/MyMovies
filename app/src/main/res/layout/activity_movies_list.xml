@@ -28,7 +28,8 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin"
-            tools:context=".Activities.MoviesListActivity">
+            tools:context=".Activities.MoviesListActivity"
+            android:background="#1b1919">
 
             <ImageView
                 android:id="@+id/movies_list_icon"
@@ -44,46 +45,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/handler"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="1"
-                    android:background="#83bbe6"
-                    android:text="Handler" />
-
-                <Button
-                    android:id="@+id/handlerPost"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="1"
-                    android:background="#83bbe6"
-                    android:text="Handler Post" />
-
-                <Button
-                    android:id="@+id/service"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="1"
-                    android:background="#83bbe6"
-                    android:text="Service" />
-
-                <Button
-                    android:id="@+id/broadcast"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:allowUndo="false"
-                    android:background="#83bbe6"
-                    android:text="broadcast" />
 
             </LinearLayout>
 
@@ -101,7 +62,7 @@
                     android:layout_marginBottom="20dp"
                     android:layout_marginTop="20dp"
                     android:layout_toLeftOf="@+id/searchButton"
-                    android:background="#ffffff"
+                    android:background="#aaa2a2"
                     android:hint="@string/search_hint"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
