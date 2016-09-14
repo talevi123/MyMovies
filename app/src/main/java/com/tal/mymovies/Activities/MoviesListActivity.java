@@ -17,7 +17,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -56,7 +55,6 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
     SharedPreferences sharedPreferences;
     public static final String MyPREFERENCES = "MyPrefs";
     public static final String KEY_MOVIES_LIST = "nameKey";
-    private Menu menu;
     private BroadcastReceiver listDataBradcastReceiver;
     private Toolbar toolbar;
     private DrawerLayout myDrawer;
@@ -383,6 +381,7 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
         @Override
         protected void onPostExecute(Movie m) {
             Intent intent = new Intent(MoviesListActivity.this, MovieActivity.class);
+           // intent.putExtra("VIDEO_ID", m.getVideoId());
             intent.putExtra("title", m.getTitle());
             intent.putExtra("description", m.getDescription());
             intent.putExtra("director", m.getDirector());

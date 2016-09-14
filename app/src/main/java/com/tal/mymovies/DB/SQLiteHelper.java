@@ -54,4 +54,5 @@ public class SQLiteHelper extends SQLiteOpenHelper {
             COLUMN_GENRE + " TEXT," +
             COLUMN_RATING + " TEXT" +
             " )";
+
 }

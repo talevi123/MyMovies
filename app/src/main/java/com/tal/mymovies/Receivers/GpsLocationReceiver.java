@@ -5,15 +5,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.location.LocationManager;
 import android.provider.Settings;
-
-import com.tal.mymovies.Activities.MoviesListActivity;
 
 
 public class GpsLocationReceiver extends BroadcastReceiver {
-
-    private Context context;
 
     public GpsLocationReceiver() {
 
@@ -21,10 +16,13 @@ public class GpsLocationReceiver extends BroadcastReceiver {
 
     public void onReceive(Context context, Intent intent) {
         if (intent.getExtras() != null) {
+            boolean enabled = (boolean) intent.getExtras().get("enabled");
+            if(enabled == true)
+                showSettingsAlert(context);
         }
     }
 
-    public void showSettingsAlert() {
+    public void showSettingsAlert(final Context context) {
 
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
         alertDialog.setTitle("GPS is settings");

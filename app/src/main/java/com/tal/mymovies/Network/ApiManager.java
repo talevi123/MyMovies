@@ -42,17 +42,25 @@ public class ApiManager {
     }
 
     public static Movie findMovie(String title) {
+       // String videoId = getId(title);
         String searchResultJson = ConnectionManager.sendGetRequest(BASE_URL + PARAM_I + title + URL_SUFFIX);
         if (searchResultJson != null) {
             try {
                 JSONObject searchJsonObject = new JSONObject(searchResultJson);
                 Movie movie = new Movie(searchJsonObject);
+    //            movie.SetVideoId(videoId);
                 return movie;
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
         return null;
+    }
+
+    private static String getId(String title){
+        Youtubeconnector yc = new Youtubeconnector();
+        String ans = yc.search(title);
+        return ans;
     }
 
 

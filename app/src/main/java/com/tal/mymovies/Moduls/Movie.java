@@ -1,7 +1,5 @@
 package com.tal.mymovies.Moduls;
 
-import android.os.Parcelable;
-
 import org.json.JSONObject;
 
 /**
@@ -18,19 +16,27 @@ public class Movie  {
     public String imdbId;
     public String genre;
     public String rating;
+    public String videoId;
 
 
-    public Movie(int id, String title, String description, String imageUrl, long duration) {
+    public Movie(int id, String imdbId, String title, String description, String imageUrl,String duration,String year,String director,String genre,String rating) {
         this.id = id;
+        this.imdbId = imdbId;
         this.title = title;
         this.description = description;
         this.imageUrl = imageUrl;
+        this.duration = duration;
+        this.year = year;
+        this.director = director;
+        this.genre = genre;
+        this.rating = rating;
     }
 
     public Movie(JSONObject jsonObject) {
+        this.id = id;
+        imdbId = jsonObject.optString("imdbID");
         title = jsonObject.optString("Title");
         year = jsonObject.optString("Year");
-        imdbId = jsonObject.optString("imdbID");
         imageUrl = jsonObject.optString("Poster");
         description = jsonObject.optString("Plot");
         director = jsonObject.optString("Director");
@@ -39,6 +45,9 @@ public class Movie  {
         rating = jsonObject.optString("imdbRating");
     }
 
+    public void SetVideoId(String videoId) {this.videoId = videoId;}
+
+    public String getVideoId() {return videoId;}
 
     public int getId() {
         return id;
