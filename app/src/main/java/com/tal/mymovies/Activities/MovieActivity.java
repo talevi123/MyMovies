@@ -2,8 +2,6 @@ package com.tal.mymovies.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -13,7 +11,7 @@ import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
 import com.squareup.picasso.Picasso;
-import com.tal.mymovies.Network.YoutubeConnector;
+import com.tal.mymovies.Network.Youtubeconnector;
 import com.tal.mymovies.R;
 
 
@@ -71,7 +69,7 @@ public class MovieActivity extends YouTubeBaseActivity {
 
         };
         if (video_id != null) {
-            youtube.initialize(YoutubeConnector.KEY_API, onInitializedListener);
+            youtube.initialize(Youtubeconnector.KEY_API, onInitializedListener);
         }
     }
 }

@@ -18,43 +18,47 @@ import java.util.List;
  */
 public class Youtubeconnector {
     private YouTube youTube;
-    private YouTube.Search.List query;
+    private static Youtubeconnector instance;
 
     public static long MAX_RESULTS = 1;
-    public static String KEY_API = "AIzaSyBI7gz3jbGZdbS9MjlRjnv4Ur-s1s9HckQ";
+    public static String KEY_API = "AIzaSyAcbLs3jhbd4HapqUfCpALxNzwncoHGMmI";
 
-    public Youtubeconnector(){
-        youTube = new YouTube.Builder(new NetHttpTransport(),new JacksonFactory(),new HttpRequestInitializer() {
+    public static Youtubeconnector getInstance() {
+        if (instance == null) {
+            instance = new Youtubeconnector();
+        }
+
+        return instance;
+    }
+
+    private Youtubeconnector() {
+        youTube = new YouTube.Builder(new NetHttpTransport(), new JacksonFactory(), new HttpRequestInitializer() {
 
             @Override
             public void initialize(HttpRequest httpRequest) throws IOException {
             }
         }).setApplicationName("MyMovies").build();
+    }
 
+    public String search(String keywords) {
         try {
-            query = youTube.search().list("id");
+            YouTube.Search.List query = youTube.search().list("id,snippet");
             query.setKey(KEY_API);
             query.setType("video");
             query.setMaxResults(MAX_RESULTS);
             query.setFields("items(id/videoId)");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public String search(String keywords){
-        query.setQ("trailer "+keywords);
-        try {
+            query.setQ("trailer " + keywords);
             SearchListResponse response = query.execute();
             List<SearchResult> results = response.getItems();
-            SearchResult result = results.get(0);
-            String ans = result.getId().getVideoId();
-            return ans;
+            if (results != null && results.size() > 0) {
+                SearchResult result = results.get(0);
+                String ans = result.getId().getVideoId();
+                return ans;
+            }
         } catch (IOException e) {
             e.printStackTrace();
-            return null;
         }
-
+        return null;
     }
 
 }

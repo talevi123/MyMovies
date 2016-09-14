@@ -58,7 +58,7 @@ public class ApiManager {
     }
 
     private static String getId(String title) {
-        String ans = YoutubeConnector.getInstance().search(title);
+        String ans = Youtubeconnector.getInstance().search(title);
         return ans;
     }
 
