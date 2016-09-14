@@ -141,14 +141,5 @@
         android:layout_marginTop="20sp"
         android:background="#ffffff" />
 
-    <Button
-        android:id="@+id/platbtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="PLAY"/>
-
-
-
 
 </LinearLayout>

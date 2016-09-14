@@ -134,6 +134,9 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
             case R.id.broadcastrecevierMenu:
                 bradcastButton();
                 break;
+            case R.id.settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                break;
             default:
         }
 
@@ -381,7 +384,7 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
         @Override
         protected void onPostExecute(Movie m) {
             Intent intent = new Intent(MoviesListActivity.this, MovieActivity.class);
-           // intent.putExtra("VIDEO_ID", m.getVideoId());
+            intent.putExtra("VIDEO_ID", m.getVideoId());
             intent.putExtra("title", m.getTitle());
             intent.putExtra("description", m.getDescription());
             intent.putExtra("director", m.getDirector());

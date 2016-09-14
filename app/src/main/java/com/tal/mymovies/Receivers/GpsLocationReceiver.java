@@ -17,7 +17,7 @@ public class GpsLocationReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (intent.getExtras() != null) {
             boolean enabled = (boolean) intent.getExtras().get("enabled");
-            if(enabled == true)
+            if(enabled)
                 showSettingsAlert(context);
         }
     }

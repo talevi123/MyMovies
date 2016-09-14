@@ -13,6 +13,7 @@ import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
 import com.squareup.picasso.Picasso;
+import com.tal.mymovies.Network.YoutubeConnector;
 import com.tal.mymovies.R;
 
 
@@ -25,15 +26,14 @@ public class MovieActivity extends YouTubeBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie);
 
-        Button youbtn = (Button) findViewById(R.id.platbtn);
         final YouTubePlayerView youtube = (YouTubePlayerView) findViewById(R.id.youtube);
 
-        ImageView image =(ImageView)findViewById(R.id.icon);
+        ImageView image = (ImageView) findViewById(R.id.icon);
         TextView title = (TextView) findViewById(R.id.title);
         TextView description = (TextView) findViewById(R.id.plot);
         TextView director = (TextView) findViewById(R.id.director);
         TextView min = (TextView) findViewById(R.id.min);
-        TextView genre  = (TextView) findViewById(R.id.genre);
+        TextView genre = (TextView) findViewById(R.id.genre);
         TextView rating = (TextView) findViewById(R.id.r);
         RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);
 
@@ -49,16 +49,19 @@ public class MovieActivity extends YouTubeBaseActivity {
 
         title.setText(getTitle);
         description.setText(getDescription);
-        director.setText(getDirector+" ("+getYear+")");
+        director.setText(getDirector + " (" + getYear + ")");
         min.setText(getMin);
         genre.setText(getGenre);
         rating.setText(getRating);
         Picasso.with(this).load(getImageurl).into(image);
 
+        final String video_id = getIntent().getStringExtra("VIDEO_ID");
         onInitializedListener = new YouTubePlayer.OnInitializedListener() {
             @Override
             public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
-                youTubePlayer.cueVideo(getIntent().getStringExtra("VIDEO_ID"));
+                if (video_id != null) {
+                    youTubePlayer.cueVideo(video_id);
+                }
             }
 
             @Override
@@ -67,12 +70,8 @@ public class MovieActivity extends YouTubeBaseActivity {
             }
 
         };
-
-        youbtn.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                youtube.initialize("AIzaSyBI7gz3jbGZdbS9MjlRjnv4Ur-s1s9HckQ",onInitializedListener);
-            }
-        });
+        if (video_id != null) {
+            youtube.initialize(YoutubeConnector.KEY_API, onInitializedListener);
+        }
     }
 }

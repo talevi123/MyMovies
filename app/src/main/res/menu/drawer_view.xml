@@ -17,5 +17,9 @@
             android:id="@+id/broadcastrecevierMenu"
             android:icon="@drawable/ic_4"
             android:title="Broadcastrecevier" />
+        <item
+            android:id="@+id/settings"
+            android:icon="@android:drawable/ic_menu_manage"
+            android:title="Settings" />
     </group>
 </menu>

@@ -64,8 +64,8 @@ public class DBManager {
         database.insert(SQLiteHelper.TABLE_MOVIES, null, cv);
     }
 
-    public List<Movie> getAllComments(){
-        List<Movie> movies = new ArrayList<Movie>();
+    public List<Movie> getAllMovies(){
+        List<Movie> movies = new ArrayList<>();
 
         Cursor cursor = database.query(SQLiteHelper.TABLE_MOVIES,allColumns,null,null,null,null,null);
         cursor.moveToFirst();
