@@ -10,19 +10,23 @@ import android.provider.Settings;
 
 public class GpsLocationReceiver extends BroadcastReceiver {
 
+    public static GpsLocationReceiverListener gpsLocationReceiverListener;
+
     public GpsLocationReceiver() {
 
     }
 
+    @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.getExtras() != null) {
             boolean enabled = (boolean) intent.getExtras().get("enabled");
-            if(enabled)
-                showSettingsAlert(context);
+            if (enabled) {
+                gpsLocationReceiverListener.gpsConnectionChange();
+            }
         }
     }
 
-    public void showSettingsAlert(final Context context) {
+    public static void showSettingsAlert(final Context context) {
 
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
         alertDialog.setTitle("GPS is settings");
@@ -41,6 +45,11 @@ public class GpsLocationReceiver extends BroadcastReceiver {
             }
         });
         alertDialog.show();
+    }
+
+
+    public interface GpsLocationReceiverListener {
+        void gpsConnectionChange();
     }
 
 }

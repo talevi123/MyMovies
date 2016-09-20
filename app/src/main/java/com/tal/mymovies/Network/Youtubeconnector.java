@@ -47,7 +47,7 @@ public class Youtubeconnector {
             query.setType("video");
             query.setMaxResults(MAX_RESULTS);
             query.setFields("items(id/videoId)");
-            query.setQ("trailer " + keywords);
+            query.setQ(keywords + " movie trailer");
             SearchListResponse response = query.execute();
             List<SearchResult> results = response.getItems();
             if (results != null && results.size() > 0) {

@@ -8,9 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.tal.mymovies.Moduls.Movie;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,20 +75,21 @@ public class DBManager {
         return movies;
     }
 
+
     private Movie cursorToMovie(Cursor cursor){
 
-        JSONObject movie = new JSONObject();
-        for(int i=0; i<allColumns.length ;i++) {
-            try {
-                if (i == 0)
-                    movie.put(cursor.getColumnName(i), cursor.getInt(i));
-                else
-                    movie.put(cursor.getColumnName(i), cursor.getString(i));
-            }
-            catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        return new Movie(movie);
+       int i = cursor.getInt(0);
+       String a = cursor.getString(1);
+       String b = cursor.getString(2);
+       String c = cursor.getString(3);
+       String d = cursor.getString(4);
+       String e = cursor.getString(5);
+       String f = cursor.getString(6);
+       String g = cursor.getString(7);
+       String h = cursor.getString(8);
+       String j = cursor.getString(8);
+
+       return new Movie(i,a,b,c,d,e,f,g,h,j);
     }
+
 }

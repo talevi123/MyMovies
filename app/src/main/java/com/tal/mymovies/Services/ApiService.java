@@ -2,7 +2,6 @@ package com.tal.mymovies.Services;
 
 import android.app.Activity;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -41,12 +40,12 @@ public class ApiService extends Service {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        List<Movie> movieieList = ApiManager.searchMovie(searchParam);
+                        List<Movie> movieList = ApiManager.searchMovie(searchParam);
 
                         Bundle resultBundle = new Bundle();
                         resultBundle.putString(KEY_API_METHOD, REQUEST_SEARCH_MOVIE);
                         JSONArray jsonArray = new JSONArray();
-                        for (Movie movie : movieieList) {
+                        for (Movie movie : movieList) {
                             try {
                                 jsonArray.put(new JSONObject(movie.toString()));
                             } catch (JSONException e) {

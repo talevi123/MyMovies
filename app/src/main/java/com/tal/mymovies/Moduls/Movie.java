@@ -33,7 +33,6 @@ public class Movie  {
     }
 
     public Movie(JSONObject jsonObject) {
-        this.id = id;
         imdbId = jsonObject.optString("imdbID");
         title = jsonObject.optString("Title");
         year = jsonObject.optString("Year");
@@ -44,6 +43,7 @@ public class Movie  {
         genre = jsonObject.optString("Genre");
         rating = jsonObject.optString("imdbRating");
     }
+
 
     public void SetVideoId(String videoId) {this.videoId = videoId;}
 

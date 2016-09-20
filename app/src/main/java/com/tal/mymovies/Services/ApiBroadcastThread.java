@@ -3,8 +3,6 @@ package com.tal.mymovies.Services;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.tal.mymovies.Activities.MoviesListActivity;

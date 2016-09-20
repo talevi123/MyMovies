@@ -30,6 +30,7 @@ import com.tal.mymovies.Adapters.MoviesListAdapter;
 import com.tal.mymovies.Moduls.Movie;
 import com.tal.mymovies.Network.ApiManager;
 import com.tal.mymovies.R;
+import com.tal.mymovies.Receivers.GpsLocationReceiver;
 import com.tal.mymovies.Services.ApiBroadcastThread;
 import com.tal.mymovies.Services.ApiService;
 import com.tal.mymovies.Services.ApiThread;
@@ -42,7 +43,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MoviesListActivity extends AppCompatActivity implements MyResultReceiver.Receiver {
+public class MoviesListActivity extends AppCompatActivity implements MyResultReceiver.Receiver,GpsLocationReceiver.GpsLocationReceiverListener {
 
     private static final String TAG = "MoviesListActivity";
 
@@ -77,6 +78,13 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
         initMoviesList();
 
     }
+
+
+    @Override
+    public void gpsConnectionChange() {
+        GpsLocationReceiver.showSettingsAlert(this);
+    }
+
 
     private void initListDataBroadcastReceiver() {
         listDataBradcastReceiver = new BroadcastReceiver() {
@@ -329,6 +337,7 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
             });
         }
     }
+
 
     public class SearchMoviesTask extends AsyncTask<String, Void, List<Movie>> {
 
