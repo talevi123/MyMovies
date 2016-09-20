@@ -20,10 +20,10 @@ public class DBManager {
 
     private SQLiteDatabase database;
     private SQLiteHelper dbHelper;
-    private String[] allColumns = {SQLiteHelper.COLUMN_ID,SQLiteHelper.COLUMN_IMDB_ID,SQLiteHelper.COLUMN_TITLE,
-                                    SQLiteHelper.COLUMN_DESCRIPTION,SQLiteHelper.COLUMN_IMAGE,SQLiteHelper.COLUMN_DURATION,
-                                    SQLiteHelper.COLUMN_YEAR,SQLiteHelper.COLUMN_DIRECTOR,SQLiteHelper.COLUMN_GENRE,
-                                    SQLiteHelper.COLUMN_RATING};
+    private String[] allColumns = {SQLiteHelper.COLUMN_ID, SQLiteHelper.COLUMN_IMDB_ID, SQLiteHelper.COLUMN_TITLE,
+            SQLiteHelper.COLUMN_DESCRIPTION, SQLiteHelper.COLUMN_IMAGE, SQLiteHelper.COLUMN_DURATION,
+            SQLiteHelper.COLUMN_YEAR, SQLiteHelper.COLUMN_DIRECTOR, SQLiteHelper.COLUMN_GENRE,
+            SQLiteHelper.COLUMN_RATING};
 
     public static DBManager getInstance(Context context) {
         if (instance == null) {
@@ -61,13 +61,13 @@ public class DBManager {
         database.insert(SQLiteHelper.TABLE_MOVIES, null, cv);
     }
 
-    public List<Movie> getAllMovies(){
+    public List<Movie> getAllMovies() {
         List<Movie> movies = new ArrayList<>();
 
-        Cursor cursor = database.query(SQLiteHelper.TABLE_MOVIES,allColumns,null,null,null,null,null);
+        Cursor cursor = database.query(SQLiteHelper.TABLE_MOVIES, allColumns, null, null, null, null, null);
         cursor.moveToFirst();
-        while (!cursor.isAfterLast()){
-            Movie movie = cursorToMovie(cursor);
+        while (!cursor.isAfterLast()) {
+            Movie movie = new Movie(cursor);
             movies.add(movie);
             cursor.moveToNext();
         }
@@ -75,21 +75,8 @@ public class DBManager {
         return movies;
     }
 
-
-    private Movie cursorToMovie(Cursor cursor){
-
-       int i = cursor.getInt(0);
-       String a = cursor.getString(1);
-       String b = cursor.getString(2);
-       String c = cursor.getString(3);
-       String d = cursor.getString(4);
-       String e = cursor.getString(5);
-       String f = cursor.getString(6);
-       String g = cursor.getString(7);
-       String h = cursor.getString(8);
-       String j = cursor.getString(8);
-
-       return new Movie(i,a,b,c,d,e,f,g,h,j);
+    public Cursor getAllMoviesAsCursor() {
+        return database.query(SQLiteHelper.TABLE_MOVIES, allColumns, null, null, null, null, null);
     }
 
 }

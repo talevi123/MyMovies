@@ -11,6 +11,7 @@ import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
 import com.squareup.picasso.Picasso;
+import com.tal.mymovies.MyMoviesApplication;
 import com.tal.mymovies.Network.Youtubeconnector;
 import com.tal.mymovies.R;
 
@@ -71,5 +72,17 @@ public class MovieActivity extends YouTubeBaseActivity {
         if (video_id != null) {
             youtube.initialize(Youtubeconnector.KEY_API, onInitializedListener);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MyMoviesApplication.getInstance().setCurrentActivity(this);
+    }
+
+    @Override
+    protected void onPause() {
+        MyMoviesApplication.getInstance().setCurrentActivity(null);
+        super.onPause();
     }
 }

@@ -6,7 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+import com.tal.mymovies.DB.SQLiteHelper;
 import com.tal.mymovies.R;
 
 /**
@@ -14,20 +18,24 @@ import com.tal.mymovies.R;
  */
 public class MoviesListCursorAdapter extends CursorAdapter {
 
-    private LayoutInflater cursorInflater;
-
-    public MoviesListCursorAdapter(Context context,Cursor cursor,int flags){
-        super(context,cursor,flags);
-        cursorInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    public MoviesListCursorAdapter(Context context, Cursor cursor) {
+        super(context, cursor, true);
     }
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
-        return cursorInflater.inflate(R.layout.activity_line_list,viewGroup,false);
+        return LayoutInflater.from(context).inflate(R.layout.activity_line_list, viewGroup, false);
     }
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
+        ImageView icon = (ImageView) view.findViewById(R.id.list_image);
+        Picasso.with(context).load(cursor.getString(cursor.getColumnIndex(SQLiteHelper.COLUMN_IMAGE))).into(icon);
 
+        TextView title = (TextView) view.findViewById(R.id.title);
+        title.setText(cursor.getString(cursor.getColumnIndex(SQLiteHelper.COLUMN_TITLE)));
+
+        TextView genre = (TextView) view.findViewById(R.id.genre);
+        genre.setText(cursor.getString(cursor.getColumnIndex(SQLiteHelper.COLUMN_GENRE)));
     }
 }

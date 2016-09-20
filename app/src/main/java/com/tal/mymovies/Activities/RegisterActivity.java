@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import com.tal.mymovies.R;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends BaseActivity {
 
     SharedPreferences sp;
 
@@ -28,31 +28,33 @@ public class RegisterActivity extends AppCompatActivity {
 
         sp = getSharedPreferences("key", 0);
 
-        registerBtn.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                String fullNameInput=fullName.getText().toString();
-                String emailInput=email.getText().toString();
-                String passwordInput=passowrd.getText().toString();
+        if (registerBtn != null) {
+            registerBtn.setOnClickListener(new OnClickListener() {
+                public void onClick(View v) {
+                    String fullNameInput=fullName.getText().toString();
+                    String emailInput=email.getText().toString();
+                    String passwordInput=passowrd.getText().toString();
 
-                if( fullNameInput !=null && emailInput !=null && passwordInput !=null) {
+                    if( fullNameInput !=null && emailInput !=null && passwordInput !=null) {
 
-                    Intent intent = new Intent(RegisterActivity.this, MoviesListActivity.class);
+                        Intent intent = new Intent(RegisterActivity.this, MoviesListActivity.class);
 
-                    SharedPreferences.Editor sedt = sp.edit();
-                    sedt.putString("textvalue2", passwordInput);
-                    sedt.commit();
+                        SharedPreferences.Editor sedt = sp.edit();
+                        sedt.putString("textvalue2", passwordInput);
+                        sedt.commit();
 
-                    intent.putExtra("full_name", fullNameInput);
-                    intent.putExtra("email", emailInput);
-                    intent.putExtra("password", passwordInput);
-                    startActivity(intent);
+                        intent.putExtra("full_name", fullNameInput);
+                        intent.putExtra("email", emailInput);
+                        intent.putExtra("password", passwordInput);
+                        startActivity(intent);
+                    }
+
+                    else {
+                        Toast.makeText(RegisterActivity.this, "Please fill all details",Toast.LENGTH_SHORT).show();
+                    }
                 }
-
-                else {
-                    Toast.makeText(RegisterActivity.this, "Please fill all details",Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+            });
+        }
 
 //SharedPreferences sp = getSharedPreferences("key", 0);
         //String tValue = sp.getString("textvalue","");

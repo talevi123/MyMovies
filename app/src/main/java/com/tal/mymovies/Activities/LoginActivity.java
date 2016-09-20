@@ -13,7 +13,7 @@ import android.widget.Toast;
 import com.tal.mymovies.R;
 
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

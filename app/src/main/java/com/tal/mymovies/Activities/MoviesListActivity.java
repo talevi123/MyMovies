@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,6 +28,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.tal.mymovies.Adapters.MoviesListAdapter;
+import com.tal.mymovies.Adapters.MoviesListCursorAdapter;
+import com.tal.mymovies.DB.DBManager;
 import com.tal.mymovies.Moduls.Movie;
 import com.tal.mymovies.Network.ApiManager;
 import com.tal.mymovies.R;
@@ -43,13 +46,14 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MoviesListActivity extends AppCompatActivity implements MyResultReceiver.Receiver,GpsLocationReceiver.GpsLocationReceiverListener {
+public class MoviesListActivity extends BaseActivity implements MyResultReceiver.Receiver {
 
     private static final String TAG = "MoviesListActivity";
 
     public static final String EVENT_NETWORK_DATA_READY = "com.tal.mymovies.NETWORK_DATA_READY";
 
     private MoviesListAdapter adapter;
+    private MoviesListCursorAdapter cursorAdapter;
     private MyResultReceiver resultReceiver;
     private EditText searchBox;
     ProgressDialog progressDialog;
@@ -61,6 +65,7 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
     private DrawerLayout myDrawer;
     private NavigationView naView;
     private ActionBarDrawerToggle drawerToggle;
+    private ListView listview;
 
 
     //////////////////////////////////////////oncreate//////////////////////////////////////
@@ -77,12 +82,6 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
         initSearchButton();
         initMoviesList();
 
-    }
-
-
-    @Override
-    public void gpsConnectionChange() {
-        GpsLocationReceiver.showSettingsAlert(this);
     }
 
 
@@ -278,9 +277,14 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
     }
 
     private void updateListViewAdapter(List<Movie> movieList) {
-        adapter.clear();
-        adapter.addAll(movieList);
-        adapter.notifyDataSetChanged();
+//        adapter.clear();
+//        adapter.addAll(movieList);
+//        adapter.notifyDataSetChanged();
+
+        if (cursorAdapter == null) {
+            cursorAdapter = new MoviesListCursorAdapter(this, DBManager.getInstance(this).getAllMoviesAsCursor());
+            listview.setAdapter(cursorAdapter);
+        }
 
         progressDialog.dismiss();
     }
@@ -357,7 +361,7 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
     /////////////////////
 
     private void initMoviesList() {
-        final ListView listview = (ListView) findViewById(R.id.listview);
+        listview = (ListView) findViewById(R.id.listview);
         List<Movie> movies = new ArrayList<>();
 
         String savedMoviesList = sharedPreferences.getString(KEY_MOVIES_LIST, null);
@@ -365,10 +369,18 @@ public class MoviesListActivity extends AppCompatActivity implements MyResultRec
             movies = parseMoviesListJson(savedMoviesList);
         }
 
-        adapter = new MoviesListAdapter(this, R.layout.activity_line_list, movies);
+//        adapter = new MoviesListAdapter(this, R.layout.activity_line_list, movies);
+        Cursor allMoviesAsCursor = DBManager.getInstance(this).getAllMoviesAsCursor();
+        if (allMoviesAsCursor.getCount() > 0) {
+            cursorAdapter = new MoviesListCursorAdapter(this, allMoviesAsCursor);
+        }
 
         if (listview != null) {
-            listview.setAdapter(adapter);
+//            listview.setAdapter(adapter);
+
+            if (cursorAdapter != null) {
+                listview.setAdapter(cursorAdapter);
+            }
 
             listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 

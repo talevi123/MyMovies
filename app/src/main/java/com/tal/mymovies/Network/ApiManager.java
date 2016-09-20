@@ -1,6 +1,8 @@
 package com.tal.mymovies.Network;
 
+import com.tal.mymovies.DB.DBManager;
 import com.tal.mymovies.Moduls.Movie;
+import com.tal.mymovies.MyMoviesApplication;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,6 +33,7 @@ public class ApiManager {
                     for (int i = 0; i < searchJsonArray.length(); i++) {
                         Movie movie = new Movie(searchJsonArray.optJSONObject(i));
                         movieList.add(movie);
+                        DBManager.getInstance(MyMoviesApplication.getInstance()).addMovie(movie);
                     }
                 }
             } catch (JSONException e) {
