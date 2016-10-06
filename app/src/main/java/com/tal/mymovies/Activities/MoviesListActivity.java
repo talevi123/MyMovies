@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -46,14 +47,17 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.google.android.gms.analytics.internal.zzy.A;
+import static com.google.android.gms.analytics.internal.zzy.n;
+import static com.google.android.gms.analytics.internal.zzy.p;
+
 public class MoviesListActivity extends BaseActivity implements MyResultReceiver.Receiver {
 
     private static final String TAG = "MoviesListActivity";
 
     public static final String EVENT_NETWORK_DATA_READY = "com.tal.mymovies.NETWORK_DATA_READY";
 
-    private MoviesListAdapter adapter;
-    private MoviesListCursorAdapter cursorAdapter;
+    private BaseAdapter adapter;
     private MyResultReceiver resultReceiver;
     private EditText searchBox;
     ProgressDialog progressDialog;
@@ -277,13 +281,14 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
     }
 
     private void updateListViewAdapter(List<Movie> movieList) {
-//        adapter.clear();
-//        adapter.addAll(movieList);
-//        adapter.notifyDataSetChanged();
-
-        if (cursorAdapter == null) {
-            cursorAdapter = new MoviesListCursorAdapter(this, DBManager.getInstance(this).getAllMoviesAsCursor());
-            listview.setAdapter(cursorAdapter);
+        if (adapter instanceof MoviesListAdapter) {
+            MoviesListAdapter moviesListAdapter = (MoviesListAdapter) adapter;
+            moviesListAdapter.clear();
+            moviesListAdapter.addAll(movieList);
+            adapter.notifyDataSetChanged();
+        } else {
+            MoviesListCursorAdapter moviesListCursorAdapter = (MoviesListCursorAdapter) adapter;
+            moviesListCursorAdapter.swapCursor(DBManager.getInstance(this).getAllMoviesAsCursor());
         }
 
         progressDialog.dismiss();
@@ -371,25 +376,18 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
 
 //        adapter = new MoviesListAdapter(this, R.layout.activity_line_list, movies);
         Cursor allMoviesAsCursor = DBManager.getInstance(this).getAllMoviesAsCursor();
-        if (allMoviesAsCursor.getCount() > 0) {
-            cursorAdapter = new MoviesListCursorAdapter(this, allMoviesAsCursor);
-        }
+        adapter = new MoviesListCursorAdapter(this, allMoviesAsCursor);
 
         if (listview != null) {
-//            listview.setAdapter(adapter);
-
-            if (cursorAdapter != null) {
-                listview.setAdapter(cursorAdapter);
-            }
-
+            listview.setAdapter(adapter);
             listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                 @Override
                 public void onItemClick(AdapterView<?> parent, final View view,
                                         int position, long id) {
                     progressDialog = ProgressDialog.show(MoviesListActivity.this, "", "Loading...");
-                    Movie n = (Movie) (listview.getItemAtPosition(position));
-                    new SearchMoviesTask2().execute(n.getimdbId());
+                    Movie movie = Movie.createMovie(listview.getItemAtPosition(position));
+                    new SearchMoviesTask2().execute(movie.getimdbId());
                 }
             });
         }

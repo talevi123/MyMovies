@@ -75,6 +75,10 @@ public class DBManager {
         return movies;
     }
 
+    public void deleteAllMovies() {
+        database.delete(SQLiteHelper.TABLE_MOVIES, null, null);
+    }
+
     public Cursor getAllMoviesAsCursor() {
         return database.query(SQLiteHelper.TABLE_MOVIES, allColumns, null, null, null, null, null);
     }

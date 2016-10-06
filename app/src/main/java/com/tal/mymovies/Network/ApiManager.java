@@ -23,6 +23,7 @@ public class ApiManager {
 
 
     public static List<Movie> searchMovie(String title) {
+        DBManager.getInstance(MyMoviesApplication.getInstance()).deleteAllMovies();
         String searchResultJson = ConnectionManager.sendGetRequest(BASE_URL + PARAM_S + title + URL_SUFFIX);
         if (searchResultJson != null) {
             List<Movie> movieList = new ArrayList<>();

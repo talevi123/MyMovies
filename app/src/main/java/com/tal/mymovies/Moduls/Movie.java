@@ -6,6 +6,8 @@ import com.tal.mymovies.DB.SQLiteHelper;
 
 import org.json.JSONObject;
 
+import static com.google.android.gms.analytics.internal.zzy.c;
+
 /**
  * Created by ronen_abraham on 6/29/16.
  */
@@ -22,6 +24,15 @@ public class Movie {
     public String rating;
     public String videoId;
 
+
+    public static Movie createMovie(Object object) {
+        if (object instanceof Movie) {
+            return (Movie) object;
+        } else if (object instanceof Cursor) {
+            return new Movie((Cursor) object);
+        } else
+            return new Movie((JSONObject) object);
+    }
 
     public Movie(int id, String imdbId, String title, String description, String imageUrl, String duration, String year, String director, String genre, String rating) {
         this.id = id;
