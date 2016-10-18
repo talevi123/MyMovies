@@ -47,20 +47,19 @@
         android:text="Genre"/>
 
 
-    <TextView
-        android:id="@+id/duration"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ImageView
+        android:id="@+id/likeImageView"
+        android:layout_width="60dip"
+        android:layout_height="60dip"
+        android:padding="8dp"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/ic_like"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@id/title"
-        android:gravity="right"
-        android:text="3:43"
-        android:layout_marginRight="5dip"
-        android:textSize="10dip"
-        android:textColor="#10bcc9"
-        android:textStyle="bold"/>
+        />
 
-    <ImageView android:layout_width="20dp"
+    <ImageView
+        android:id="@+id/aro_img"
+        android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"

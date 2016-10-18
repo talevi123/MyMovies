@@ -6,17 +6,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -34,7 +34,6 @@ import com.tal.mymovies.DB.DBManager;
 import com.tal.mymovies.Moduls.Movie;
 import com.tal.mymovies.Network.ApiManager;
 import com.tal.mymovies.R;
-import com.tal.mymovies.Receivers.GpsLocationReceiver;
 import com.tal.mymovies.Services.ApiBroadcastThread;
 import com.tal.mymovies.Services.ApiService;
 import com.tal.mymovies.Services.ApiThread;
@@ -47,10 +46,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.google.android.gms.analytics.internal.zzy.A;
-import static com.google.android.gms.analytics.internal.zzy.n;
-import static com.google.android.gms.analytics.internal.zzy.p;
-
 public class MoviesListActivity extends BaseActivity implements MyResultReceiver.Receiver {
 
     private static final String TAG = "MoviesListActivity";
@@ -62,6 +57,7 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
     private EditText searchBox;
     ProgressDialog progressDialog;
     SharedPreferences sharedPreferences;
+    //SharedPreferences.Editor editor;
     public static final String MyPREFERENCES = "MyPrefs";
     public static final String KEY_MOVIES_LIST = "nameKey";
     private BroadcastReceiver listDataBradcastReceiver;
@@ -85,6 +81,7 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
         initNavigationMenu();
         initSearchButton();
         initMoviesList();
+        floatBtn();
 
     }
 
@@ -96,6 +93,18 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
                 handlerServerResponse(intent.getExtras());
             }
         };
+    }
+
+    private void floatBtn(){
+        FloatingActionButton floatingActionBtn = (FloatingActionButton) findViewById(R.id.fab);
+
+        floatingActionBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MoviesListActivity.this,EditMovieActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     //////////////////////////////////////////End_oncreate//////////////////////////////////////
@@ -366,6 +375,7 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
     /////////////////////
 
     private void initMoviesList() {
+
         listview = (ListView) findViewById(R.id.listview);
         List<Movie> movies = new ArrayList<>();
 
@@ -374,9 +384,9 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
             movies = parseMoviesListJson(savedMoviesList);
         }
 
-//        adapter = new MoviesListAdapter(this, R.layout.activity_line_list, movies);
-        Cursor allMoviesAsCursor = DBManager.getInstance(this).getAllMoviesAsCursor();
-        adapter = new MoviesListCursorAdapter(this, allMoviesAsCursor);
+        adapter = new MoviesListAdapter(this, R.layout.activity_line_list, movies);
+ //       Cursor allMoviesAsCursor = DBManager.getInstance(this).getAllMoviesAsCursor();
+ //       adapter = new MoviesListCursorAdapter(this, allMoviesAsCursor);
 
         if (listview != null) {
             listview.setAdapter(adapter);

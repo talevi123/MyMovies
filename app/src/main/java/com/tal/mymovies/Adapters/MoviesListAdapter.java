@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.tal.mymovies.Moduls.Movie;
@@ -36,8 +37,9 @@ public class MoviesListAdapter extends ArrayAdapter<Movie> {
         View view = layoutInflater.inflate(R.layout.activity_line_list, parent, false);
 
         ImageView icon = (ImageView) view.findViewById(R.id.list_image);
-        TextView title = (TextView) view.findViewById(R.id.title);
+        final TextView title = (TextView) view.findViewById(R.id.title);
         TextView genre = (TextView) view.findViewById(R.id.genre);
+        final ImageView likeImg = (ImageView) view.findViewById(R.id.likeImageView);
 
         Movie movie = getItem(position);
         Log.v(TAG, "Position = " + position + " Movie = " + movie.toString());
@@ -47,6 +49,23 @@ public class MoviesListAdapter extends ArrayAdapter<Movie> {
         genre.setText(movie.getGenre());
 
 
+        likeImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                int id = (int)likeImg.getTag();
+
+                if(id ==R.drawable.ic_like){
+                    likeImg.setTag(R.drawable.ic_liked);
+                    likeImg.setImageResource(R.drawable.ic_liked);
+                    Toast.makeText(context,title.getText()+" added to favourites",Toast.LENGTH_SHORT).show();
+                }else{
+                    likeImg.setTag(R.drawable.ic_like);
+                    likeImg.setImageResource(R.drawable.ic_like);
+                    Toast.makeText(context,title.getText()+" removed from favourites",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         return view;
     }
