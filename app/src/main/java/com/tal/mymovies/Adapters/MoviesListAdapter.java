@@ -37,9 +37,9 @@ public class MoviesListAdapter extends ArrayAdapter<Movie> {
         View view = layoutInflater.inflate(R.layout.activity_line_list, parent, false);
 
         ImageView icon = (ImageView) view.findViewById(R.id.list_image);
-        final TextView title = (TextView) view.findViewById(R.id.title);
+        TextView title = (TextView) view.findViewById(R.id.title);
         TextView genre = (TextView) view.findViewById(R.id.genre);
-        final ImageView likeImg = (ImageView) view.findViewById(R.id.likeImageView);
+        ImageView likeImg = (ImageView) view.findViewById(R.id.likeImageView);
 
         Movie movie = getItem(position);
         Log.v(TAG, "Position = " + position + " Movie = " + movie.toString());
@@ -49,23 +49,8 @@ public class MoviesListAdapter extends ArrayAdapter<Movie> {
         genre.setText(movie.getGenre());
 
 
-        likeImg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                int id = (int)likeImg.getTag();
-
-                if(id ==R.drawable.ic_like){
-                    likeImg.setTag(R.drawable.ic_liked);
-                    likeImg.setImageResource(R.drawable.ic_liked);
-                    Toast.makeText(context,title.getText()+" added to favourites",Toast.LENGTH_SHORT).show();
-                }else{
-                    likeImg.setTag(R.drawable.ic_like);
-                    likeImg.setImageResource(R.drawable.ic_like);
-                    Toast.makeText(context,title.getText()+" removed from favourites",Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        likeImg.setImageResource(movie.isFavorite() ? R.drawable.ic_liked : R.drawable.ic_like);
+        likeImg.setOnClickListener(new OnMovieFavClickListener(movie, likeImg));
 
         return view;
     }
@@ -78,6 +63,24 @@ public class MoviesListAdapter extends ArrayAdapter<Movie> {
     @Override
     public boolean hasStableIds() {
         return true;
+    }
+
+    private class OnMovieFavClickListener implements View.OnClickListener {
+
+
+        private final Movie movie;
+        private final ImageView favImage;
+
+        public OnMovieFavClickListener(Movie movie, ImageView favImage) {
+            this.movie = movie;
+            this.favImage = favImage;
+        }
+
+        @Override
+        public void onClick(View v) {
+            movie.setFavorie(!movie.isFavorite());
+            favImage.setImageResource(movie.isFavorite() ? R.drawable.ic_liked : R.drawable.ic_like);
+        }
     }
 
 }

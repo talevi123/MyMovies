@@ -23,6 +23,7 @@ public class Movie {
     public String genre;
     public String rating;
     public String videoId;
+    public boolean favorite;
 
 
     public static Movie createMovie(Object object) {
@@ -95,6 +96,14 @@ public class Movie {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public void setFavorie(boolean favorite) {
+        this.favorite = favorite;
+    }
+
+    public boolean isFavorite() {
+        return favorite;
     }
 
     public String getDuration() {
