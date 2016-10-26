@@ -1,9 +1,10 @@
-package com.tal.mymovies.Activities;
+package com.tal.mymovies.Fragments;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -100,6 +101,10 @@ public class MovieListFragment extends Fragment  {
             listview.setAdapter(adapter);
 
         }
+    }
+
+    public Editable getSearchBoxValue() {
+        return searchBox.getText();
     }
 
 

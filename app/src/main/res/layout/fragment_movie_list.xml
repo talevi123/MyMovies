@@ -9,7 +9,7 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         android:orientation="vertical"
         android:background="#0b0a0a"
-        tools:context="com.tal.mymovies.Activities.MovieListFragment">
+        tools:context="com.tal.mymovies.Fragments.MovieListFragment">
 
 
                 <ImageView

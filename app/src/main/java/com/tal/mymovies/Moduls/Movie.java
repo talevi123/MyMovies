@@ -21,7 +21,7 @@ public class Movie {
     public String genre;
     public String rating;
     public String videoId;
-    public int favorite;
+    public boolean favorite;
 
 
     public static Movie createMovie(Object object) {
@@ -69,7 +69,7 @@ public class Movie {
         this.duration = cursor.getString(cursor.getColumnIndex(SQLiteHelper.COLUMN_DURATION));
         this.genre = cursor.getString(cursor.getColumnIndex(SQLiteHelper.COLUMN_GENRE));
         this.rating = cursor.getString(cursor.getColumnIndex(SQLiteHelper.COLUMN_RATING));
-        this.favorite = cursor.getInt(cursor.getColumnIndex(SQLiteHelper.COLUMN_FAV));
+        this.favorite = cursor.getInt(cursor.getColumnIndex(SQLiteHelper.COLUMN_FAV)) == 1;
     }
 
 
@@ -97,11 +97,11 @@ public class Movie {
         return imageUrl;
     }
 
-    public void setFavorie(int favorite) {
+    public void setFavorie(boolean favorite) {
         this.favorite = favorite;
     }
 
-    public int isFavorite() {
+    public boolean isFavorite() {
         return favorite;
     }
 

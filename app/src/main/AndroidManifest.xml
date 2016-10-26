@@ -68,8 +68,8 @@
             android:name=".Activities.EditMovieActivity"
             android:label="@string/title_activity_edit_movie"
             android:theme="@style/AppTheme" />
-        <activity android:name=".Activities.MovieListFragment" />
-        <activity android:name=".Activities.FavoritesFragment"></activity>
+        <activity android:name=".Fragments.MovieListFragment" />
+        <activity android:name=".Fragments.FavoritesFragment"></activity>
     </application>
 
 </manifest>

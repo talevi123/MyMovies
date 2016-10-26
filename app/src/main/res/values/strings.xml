@@ -18,6 +18,9 @@
     <string name="drawer_open">Slider Menu Opened</string>
     <string name="drawer_close">Slider Menu Closed</string>
 
+    <string name="array_adapter">MoviesListAdapter</string>
+    <string name="cursor_adapter">MoviesListCursorAdapter</string>
+
 
     <string name="desc_list_item_icon">Item Icon</string>
     <string name="title_activity_settings">Settings</string>
@@ -26,6 +29,7 @@
 
     <!-- Example General settings -->
     <string name="pref_header_general">General</string>
+    <string name="pref_adapter_key">change_adapter</string>
 
     <string name="pref_title_social_recommendations">Enable social recommendations</string>
     <string name="pref_description_social_recommendations">Recommendations for people to contact
@@ -51,12 +55,12 @@
 
     <string name="pref_title_choose_adapter">Choose adapter</string>
     <string-array name="pref_adapters_list_titles">
-        <item>MoviesListAdapter</item>
-        <item>MoviesListCursorAdapter</item>
+        <item>@string/array_adapter</item>
+        <item>@string/cursor_adapter</item>
     </string-array>
     <string-array name="pref_adapters_list_values">
-        <item>0</item>
-        <item>1</item>
+        <item>@string/array_adapter</item>
+        <item>@string/cursor_adapter</item>
     </string-array>
 
     <!-- Example settings for Data & Sync -->

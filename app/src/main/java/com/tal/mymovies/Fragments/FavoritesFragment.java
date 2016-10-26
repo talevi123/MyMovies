@@ -1,4 +1,4 @@
-package com.tal.mymovies.Activities;
+package com.tal.mymovies.Fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

@@ -10,9 +10,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -48,6 +50,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.tal.mymovies.R.id.searchBox;
+
 public class MoviesListActivity extends BaseActivity implements MyResultReceiver.Receiver {
 
     private static final String TAG = "MoviesListActivity";
@@ -56,12 +60,10 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
 
     private BaseAdapter adapter;
     private MyResultReceiver resultReceiver;
-    private EditText searchBox;
     ProgressDialog progressDialog;
     SharedPreferences sharedPreferences;
     //SharedPreferences.Editor editor;
-    public static final String MyPREFERENCES = "MyPrefs";
-    public static final String KEY_MOVIES_LIST = "nameKey";
+    public static final String KEY_MOVIES_LIST = "moviesList";
     private BroadcastReceiver listDataBradcastReceiver;
     private Toolbar toolbar;
     private DrawerLayout myDrawer;
@@ -70,6 +72,9 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
     private ListView listview;
     private ViewPager viewPager;
     private TabLayout tabs;
+    private String moviesListAdapterType;
+    private Fragment currentFragment;
+    private EditText searchBox;
 
 
     //////////////////////////////////////////oncreate//////////////////////////////////////
@@ -78,7 +83,7 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies_list);
 
-        sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         initListDataBroadcastReceiver();
         initNavigationMenu();
@@ -90,20 +95,21 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
     }
 
 
-    private void setViewPager(){
+    private void setViewPager() {
         tabs = (TabLayout) findViewById(R.id.tab_host);
         tabs.addTab(tabs.newTab().setText("Main"));
         tabs.addTab(tabs.newTab().setText("Favorites"));
         tabs.setTabGravity(TabLayout.GRAVITY_FILL);
 
         viewPager = (ViewPager) findViewById(R.id.pager);
-        PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(),tabs.getTabCount());
+        PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(), tabs.getTabCount());
         viewPager.setAdapter(pagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
         tabs.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
+                currentFragment = ((PagerAdapter) viewPager.getAdapter()).getFragment(tab.getPosition());
             }
 
             @Override
@@ -127,13 +133,13 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
         };
     }
 
-    private void floatBtn(){
+    private void floatBtn() {
         FloatingActionButton floatingActionBtn = (FloatingActionButton) findViewById(R.id.fab);
 
         floatingActionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MoviesListActivity.this,EditMovieActivity.class);
+                Intent intent = new Intent(MoviesListActivity.this, EditMovieActivity.class);
                 startActivity(intent);
             }
         });
@@ -225,6 +231,8 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
         // Register ListDataBroadcastReceiver to receive messages.
         LocalBroadcastManager.getInstance(this).registerReceiver(listDataBradcastReceiver,
                 new IntentFilter(EVENT_NETWORK_DATA_READY));
+        moviesListAdapterType = PreferenceManager.getDefaultSharedPreferences(this)
+                .getString(getString(R.string.pref_adapter_key), getString(R.string.array_adapter));
     }
 
     @Override
@@ -311,8 +319,7 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
         if (api_method.equals(ApiThread.REQUEST_SEARCH_MOVIE)) {
 
             String jsonarry = resultData.getString(ApiThread.KEY_MOVIES);
-            editor.putString(KEY_MOVIES_LIST, jsonarry);
-            editor.apply();
+            editor.putString(KEY_MOVIES_LIST, jsonarry).apply();
 
             List<Movie> movieList = parseMoviesListJson(jsonarry);
 
@@ -418,8 +425,8 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
         }
 
         adapter = new MoviesListAdapter(this, R.layout.activity_line_list, movies);
- //       Cursor allMoviesAsCursor = DBManager.getInstance(this).getAllMoviesAsCursor();
- //       adapter = new MoviesListCursorAdapter(this, allMoviesAsCursor);
+        //       Cursor allMoviesAsCursor = DBManager.getInstance(this).getAllMoviesAsCursor();
+        //       adapter = new MoviesListCursorAdapter(this, allMoviesAsCursor);
 
         if (listview != null) {
             listview.setAdapter(adapter);

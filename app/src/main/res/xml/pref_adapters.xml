@@ -5,7 +5,7 @@
         android:defaultValue="0"
         android:entries="@array/pref_adapters_list_titles"
         android:entryValues="@array/pref_adapters_list_values"
-        android:key="change_adapter"
+        android:key="@string/pref_adapter_key"
         android:negativeButtonText="@null"
         android:positiveButtonText="@null"
         android:title="@string/pref_title_choose_adapter" />

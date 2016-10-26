@@ -11,6 +11,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.google.android.gms.analytics.internal.zzy.b;
+
 /**
  * Created by ronen_abraham on 7/7/16.
  */
@@ -33,9 +35,9 @@ public class ApiManager {
                 if (searchJsonArray != null) {
                     for (int i = 0; i < searchJsonArray.length(); i++) {
                         Movie movie = new Movie(searchJsonArray.optJSONObject(i));
+                        boolean isFavorite = DBManager.getInstance(MyMoviesApplication.getInstance()).checkIfExsists(movie.getimdbId());
+                        movie.setFavorie(isFavorite);
                         movieList.add(movie);
-                        Boolean b = DBManager.getInstance(MyMoviesApplication.getInstance()).checkIfExsists(movie.getimdbId());
-                        if(b)
                         DBManager.getInstance(MyMoviesApplication.getInstance()).addMovie(movie);
                     }
                 }

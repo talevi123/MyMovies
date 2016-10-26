@@ -17,6 +17,8 @@ import com.tal.mymovies.R;
 
 import java.util.List;
 
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
  * handset devices, settings are presented as a single list. On tablets,
@@ -49,6 +51,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                                 ? listPreference.getEntries()[index]
                                 : null);
 
+                PreferenceManager
+                        .getDefaultSharedPreferences(preference.getContext())
+                        .edit().putString(preference.getKey(), stringValue).apply();
+
             } else {
                 preference.setSummary(stringValue);
             }
@@ -62,8 +68,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
 
         sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
-                PreferenceManager
-                        .getDefaultSharedPreferences(preference.getContext())
+                getDefaultSharedPreferences(preference.getContext())
                         .getString(preference.getKey(), ""));
     }
 

@@ -10,7 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.tal.mymovies.DB.DBManager;
 import com.tal.mymovies.Moduls.Movie;
+import com.tal.mymovies.MyMoviesApplication;
 import com.tal.mymovies.R;
 
 import java.util.List;
@@ -47,8 +49,10 @@ public class MoviesListAdapter extends ArrayAdapter<Movie> {
         title.setText(movie.getTitle());
         genre.setText(movie.getGenre());
 
-        if(movie.isFavorite() == 1)likeImg.setImageResource(R.drawable.ic_liked);
-        else likeImg.setImageResource(R.drawable.ic_like);
+        if (movie.isFavorite())
+            likeImg.setImageResource(R.drawable.ic_liked);
+        else
+            likeImg.setImageResource(R.drawable.ic_like);
 
         likeImg.setOnClickListener(new OnMovieFavClickListener(movie, likeImg));
 
@@ -78,15 +82,13 @@ public class MoviesListAdapter extends ArrayAdapter<Movie> {
 
         @Override
         public void onClick(View v) {
-            if(movie.isFavorite() == 0) movie.setFavorie(1);
-            else movie.setFavorie(0);
+            movie.setFavorie(!movie.isFavorite());
 
-            if(movie.isFavorite() == 1) {
-                //DBManager.getInstance(MyMoviesApplication.getInstance()).addToFav(movie);
+            if (movie.isFavorite()) {
+                DBManager.getInstance(MyMoviesApplication.getInstance()).addToFav(movie);
                 favImage.setImageResource(R.drawable.ic_liked);
-            }
-            else {
-                //DBManager.getInstance(MyMoviesApplication.getInstance()).deleteMovie(movie);
+            } else {
+                DBManager.getInstance(MyMoviesApplication.getInstance()).deleteMovie(movie);
                 favImage.setImageResource(R.drawable.ic_like);
             }
         }
