@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.tal.mymovies.Moduls.Movie;
@@ -48,8 +47,9 @@ public class MoviesListAdapter extends ArrayAdapter<Movie> {
         title.setText(movie.getTitle());
         genre.setText(movie.getGenre());
 
+        if(movie.isFavorite() == 1)likeImg.setImageResource(R.drawable.ic_liked);
+        else likeImg.setImageResource(R.drawable.ic_like);
 
-        likeImg.setImageResource(movie.isFavorite() ? R.drawable.ic_liked : R.drawable.ic_like);
         likeImg.setOnClickListener(new OnMovieFavClickListener(movie, likeImg));
 
         return view;
@@ -78,8 +78,17 @@ public class MoviesListAdapter extends ArrayAdapter<Movie> {
 
         @Override
         public void onClick(View v) {
-            movie.setFavorie(!movie.isFavorite());
-            favImage.setImageResource(movie.isFavorite() ? R.drawable.ic_liked : R.drawable.ic_like);
+            if(movie.isFavorite() == 0) movie.setFavorie(1);
+            else movie.setFavorie(0);
+
+            if(movie.isFavorite() == 1) {
+                //DBManager.getInstance(MyMoviesApplication.getInstance()).addToFav(movie);
+                favImage.setImageResource(R.drawable.ic_liked);
+            }
+            else {
+                //DBManager.getInstance(MyMoviesApplication.getInstance()).deleteMovie(movie);
+                favImage.setImageResource(R.drawable.ic_like);
+            }
         }
     }
 

@@ -12,8 +12,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
@@ -24,12 +26,12 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.tal.mymovies.Adapters.MoviesListAdapter;
 import com.tal.mymovies.Adapters.MoviesListCursorAdapter;
+import com.tal.mymovies.Adapters.PagerAdapter;
 import com.tal.mymovies.DB.DBManager;
 import com.tal.mymovies.Moduls.Movie;
 import com.tal.mymovies.Network.ApiManager;
@@ -66,6 +68,8 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
     private NavigationView naView;
     private ActionBarDrawerToggle drawerToggle;
     private ListView listview;
+    private ViewPager viewPager;
+    private TabLayout tabs;
 
 
     //////////////////////////////////////////oncreate//////////////////////////////////////
@@ -74,7 +78,6 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies_list);
 
-        searchBox = (EditText) findViewById(R.id.searchBox);
         sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
 
         initListDataBroadcastReceiver();
@@ -82,9 +85,38 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
         initSearchButton();
         initMoviesList();
         floatBtn();
+        setViewPager();
 
     }
 
+
+    private void setViewPager(){
+        tabs = (TabLayout) findViewById(R.id.tab_host);
+        tabs.addTab(tabs.newTab().setText("Main"));
+        tabs.addTab(tabs.newTab().setText("Favorites"));
+        tabs.setTabGravity(TabLayout.GRAVITY_FILL);
+
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(),tabs.getTabCount());
+        viewPager.setAdapter(pagerAdapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
+        tabs.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+    }
 
     private void initListDataBroadcastReceiver() {
         listDataBradcastReceiver = new BroadcastReceiver() {
@@ -341,6 +373,7 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
     //////////////////////////////////////////AsyncTask//////////////////////////////////////
 
     private void initSearchButton() {
+        searchBox = (EditText) findViewById(R.id.searchBox);
         ImageButton searchBtn = (ImageButton) findViewById(R.id.searchButton);
         if (searchBtn != null) {
             searchBtn.setOnClickListener(new View.OnClickListener() {

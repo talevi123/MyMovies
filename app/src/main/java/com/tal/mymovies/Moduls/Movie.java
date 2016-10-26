@@ -6,8 +6,6 @@ import com.tal.mymovies.DB.SQLiteHelper;
 
 import org.json.JSONObject;
 
-import static com.google.android.gms.analytics.internal.zzy.c;
-
 /**
  * Created by ronen_abraham on 6/29/16.
  */
@@ -23,7 +21,7 @@ public class Movie {
     public String genre;
     public String rating;
     public String videoId;
-    public boolean favorite;
+    public int favorite;
 
 
     public static Movie createMovie(Object object) {
@@ -71,6 +69,7 @@ public class Movie {
         this.duration = cursor.getString(cursor.getColumnIndex(SQLiteHelper.COLUMN_DURATION));
         this.genre = cursor.getString(cursor.getColumnIndex(SQLiteHelper.COLUMN_GENRE));
         this.rating = cursor.getString(cursor.getColumnIndex(SQLiteHelper.COLUMN_RATING));
+        this.favorite = cursor.getInt(cursor.getColumnIndex(SQLiteHelper.COLUMN_FAV));
     }
 
 
@@ -98,11 +97,11 @@ public class Movie {
         return imageUrl;
     }
 
-    public void setFavorie(boolean favorite) {
+    public void setFavorie(int favorite) {
         this.favorite = favorite;
     }
 
-    public boolean isFavorite() {
+    public int isFavorite() {
         return favorite;
     }
 
@@ -122,9 +121,7 @@ public class Movie {
         return director;
     }
 
-    public String getYear() {
-        return year;
-    }
+    public String getYear() {return year; }
 
     public String getRating() {
         return rating;

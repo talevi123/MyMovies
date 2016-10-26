@@ -34,6 +34,8 @@ public class ApiManager {
                     for (int i = 0; i < searchJsonArray.length(); i++) {
                         Movie movie = new Movie(searchJsonArray.optJSONObject(i));
                         movieList.add(movie);
+                        Boolean b = DBManager.getInstance(MyMoviesApplication.getInstance()).checkIfExsists(movie.getimdbId());
+                        if(b)
                         DBManager.getInstance(MyMoviesApplication.getInstance()).addMovie(movie);
                     }
                 }

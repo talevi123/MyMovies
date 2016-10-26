@@ -11,8 +11,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.CAMERA"/>
-
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:name=".MyMoviesApplication"
@@ -69,6 +68,8 @@
             android:name=".Activities.EditMovieActivity"
             android:label="@string/title_activity_edit_movie"
             android:theme="@style/AppTheme" />
+        <activity android:name=".Activities.MovieListFragment" />
+        <activity android:name=".Activities.FavoritesFragment"></activity>
     </application>
 
 </manifest>
