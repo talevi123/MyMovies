@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.view.LayoutInflater;
@@ -26,7 +27,7 @@ import com.tal.mymovies.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MovieListFragment extends Fragment  {
+public class MovieListFragment extends Fragment {
 
     private BaseAdapter adapter;
     private EditText searchBox;
@@ -36,24 +37,20 @@ public class MovieListFragment extends Fragment  {
     private String moviesListAdapterType;
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        initSearchButton();
-        initMoviesList();
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-        Bundle savedInstanceState) {
-            View view = inflater.inflate(R.layout.fragment_movie_list, container, false);
-            return view;
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_movie_list, container, false);
+
+        initSearchButton(view);
+        initMoviesList(view);
+
+        return view;
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if(context instanceof Activity){
+        if (context instanceof Activity) {
             searchMovieListener = (SearchMovieListener) context;
         }
     }
@@ -61,6 +58,10 @@ public class MovieListFragment extends Fragment  {
     @Override
     public void onResume() {
         super.onResume();
+        initMovieListType();
+    }
+
+    private void initMovieListType() {
         moviesListAdapterType = PreferenceManager.getDefaultSharedPreferences(getActivity())
                 .getString(getString(R.string.pref_adapter_key), getString(R.string.array_adapter));
     }
@@ -76,12 +77,14 @@ public class MovieListFragment extends Fragment  {
             moviesListCursorAdapter.swapCursor(DBManager.getInstance(getActivity()).getAllMoviesAsCursor());
         }
 
-        progressDialog.dismiss();
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
     }
 
-    private void initSearchButton() {
-        searchBox = (EditText) getView().findViewById(R.id.searchBox);
-        ImageButton searchBtn = (ImageButton) getView().findViewById(R.id.searchButton);
+    private void initSearchButton(View view) {
+        searchBox = (EditText) view.findViewById(R.id.searchBox);
+        ImageButton searchBtn = (ImageButton) view.findViewById(R.id.searchButton);
         if (searchBtn != null) {
             searchBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -95,12 +98,14 @@ public class MovieListFragment extends Fragment  {
         }
     }
 
-    public void initMoviesList() {
+    public void initMoviesList(View view) {
 
-        listview = (ListView) getView().findViewById(R.id.listview);
+        initMovieListType();
+
+        listview = (ListView) view.findViewById(R.id.listview);
         List<Movie> movies = new ArrayList<>();
 
-        if(moviesListAdapterType == getString(R.string.array_adapter)) {
+        if (moviesListAdapterType.equals(getString(R.string.array_adapter))) {
             adapter = new MoviesListAdapter(getActivity(), R.layout.activity_line_list, movies);
         } else {
             Cursor allMoviesAsCursor = DBManager.getInstance(getActivity()).getAllMoviesAsCursor();
@@ -126,6 +131,7 @@ public class MovieListFragment extends Fragment  {
 
     public interface SearchMovieListener {
         void searchMovie(String name);
+
         void initMovie(String imdbId);
     }
 

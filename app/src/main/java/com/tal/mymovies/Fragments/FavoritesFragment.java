@@ -23,19 +23,20 @@ public class FavoritesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_favorites, container, false);
+        initFavlist(view);
         return view;
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
+    public void onResume() {
+        super.onResume();
+        updateFavorites();
     }
 
-    public void initFavlist() {
-        listView = (ListView) getView().findViewById(R.id.fav_listview);
+    public void initFavlist(View view) {
+        listView = (ListView) view.findViewById(R.id.fav_listview);
         Cursor c = DBManager.getInstance(getActivity()).getAllFavMoviesAsCursor();
-        favListCursorAdapter = new FavListCursorAdapter(getActivity(),c);
+        favListCursorAdapter = new FavListCursorAdapter(getActivity(), c);
 
         listView.setAdapter(favListCursorAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -46,5 +47,9 @@ public class FavoritesFragment extends Fragment {
         });
     }
 
+    public void updateFavorites() {
+        Cursor c = DBManager.getInstance(getActivity()).getAllFavMoviesAsCursor();
+        favListCursorAdapter.swapCursor(c);
+    }
 
 }
