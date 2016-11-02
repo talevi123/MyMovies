@@ -56,8 +56,8 @@ public class SQLiteHelper extends SQLiteOpenHelper {
             COLUMN_YEAR + " TEXT," +
             COLUMN_DIRECTOR + " TEXT," +
             COLUMN_GENRE + " TEXT," +
-            COLUMN_RATING + " TEXT" +
-            COLUMN_FAV + " INTEGER " +
+            COLUMN_RATING + " TEXT," +
+            COLUMN_FAV + " INTEGER" +
             " )";
 
     private static final String CREATE_FAVORITE_TABLE = "CREATE TABLE " + TABLE_FAVORITE +
@@ -71,8 +71,8 @@ public class SQLiteHelper extends SQLiteOpenHelper {
             COLUMN_YEAR + " TEXT," +
             COLUMN_DIRECTOR + " TEXT," +
             COLUMN_GENRE + " TEXT," +
-            COLUMN_RATING + " TEXT" +
-            COLUMN_FAV + " INTEGER " +
+            COLUMN_RATING + " TEXT," +
+            COLUMN_FAV + " INTEGER" +
             " )";
 
 

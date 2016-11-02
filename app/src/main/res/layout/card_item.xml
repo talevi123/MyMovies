@@ -41,7 +41,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/titleTextView"
+                        android:id="@+id/card_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="16dp"
@@ -63,6 +63,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/card_plot"
                 android:maxLines="3"
                 android:layout_marginLeft="8dp"
                 android:text="Create a new project in Android Studio from File ⇒ New Project. When it prompts you to select the default activity, select Empty Activity and proceed."

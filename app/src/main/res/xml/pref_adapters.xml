@@ -2,7 +2,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <ListPreference
-        android:defaultValue="0"
         android:entries="@array/pref_adapters_list_titles"
         android:entryValues="@array/pref_adapters_list_values"
         android:key="@string/pref_adapter_key"

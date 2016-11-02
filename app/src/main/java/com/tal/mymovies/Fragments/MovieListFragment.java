@@ -1,13 +1,17 @@
 package com.tal.mymovies.Fragments;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
-import android.os.AsyncTask;
+import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -17,7 +21,6 @@ import com.tal.mymovies.Adapters.MoviesListAdapter;
 import com.tal.mymovies.Adapters.MoviesListCursorAdapter;
 import com.tal.mymovies.DB.DBManager;
 import com.tal.mymovies.Moduls.Movie;
-import com.tal.mymovies.Network.ApiManager;
 import com.tal.mymovies.R;
 
 import java.util.ArrayList;
@@ -29,6 +32,8 @@ public class MovieListFragment extends Fragment  {
     private EditText searchBox;
     ProgressDialog progressDialog;
     private ListView listview;
+    SearchMovieListener searchMovieListener;
+    private String moviesListAdapterType;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -45,7 +50,22 @@ public class MovieListFragment extends Fragment  {
             return view;
     }
 
-    private void updateListViewAdapter(List<Movie> movieList) {
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if(context instanceof Activity){
+            searchMovieListener = (SearchMovieListener) context;
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        moviesListAdapterType = PreferenceManager.getDefaultSharedPreferences(getActivity())
+                .getString(getString(R.string.pref_adapter_key), getString(R.string.array_adapter));
+    }
+
+    public void updateListViewAdapter(List<Movie> movieList) {
         if (adapter instanceof MoviesListAdapter) {
             MoviesListAdapter moviesListAdapter = (MoviesListAdapter) adapter;
             moviesListAdapter.clear();
@@ -68,25 +88,10 @@ public class MovieListFragment extends Fragment  {
                 public void onClick(View v) {
                     progressDialog = ProgressDialog.show(getActivity(), "", "Loading...");
                     if (searchBox != null && searchBox.getText() != null && searchBox.getText().length() > 0) {
-                        new SearchMoviesTask().execute(searchBox.getText().toString());
+                        searchMovieListener.searchMovie((searchBox.getText().toString()));
                     }
                 }
             });
-        }
-    }
-
-    public class SearchMoviesTask extends AsyncTask<String, Void, List<Movie>> {
-
-        @Override
-        protected List<Movie> doInBackground(String... params) {
-            return ApiManager.searchMovie(params[0]);
-        }
-
-        @Override
-        protected void onPostExecute(List<Movie> movies) {
-            if (movies != null) {
-                updateListViewAdapter(movies);
-            }
         }
     }
 
@@ -95,11 +100,23 @@ public class MovieListFragment extends Fragment  {
         listview = (ListView) getView().findViewById(R.id.listview);
         List<Movie> movies = new ArrayList<>();
 
-        adapter = new MoviesListAdapter(getActivity(), R.layout.activity_line_list, movies);
+        if(moviesListAdapterType == getString(R.string.array_adapter)) {
+            adapter = new MoviesListAdapter(getActivity(), R.layout.activity_line_list, movies);
+        } else {
+            Cursor allMoviesAsCursor = DBManager.getInstance(getActivity()).getAllMoviesAsCursor();
+            adapter = new MoviesListCursorAdapter(getActivity(), allMoviesAsCursor);
+        }
 
         if (listview != null) {
             listview.setAdapter(adapter);
-
+            listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                    progressDialog = ProgressDialog.show(getActivity(), "", "Loading...");
+                    Movie movie = Movie.createMovie(listview.getItemAtPosition(position));
+                    searchMovieListener.initMovie(movie.getimdbId());
+                }
+            });
         }
     }
 
@@ -107,5 +124,9 @@ public class MovieListFragment extends Fragment  {
         return searchBox.getText();
     }
 
+    public interface SearchMovieListener {
+        void searchMovie(String name);
+        void initMovie(String imdbId);
+    }
 
 }

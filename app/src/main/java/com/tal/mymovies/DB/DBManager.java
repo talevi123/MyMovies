@@ -112,4 +112,8 @@ public class DBManager {
         return database.query(SQLiteHelper.TABLE_MOVIES, allColumns, null, null, null, null, null);
     }
 
+    public Cursor getAllFavMoviesAsCursor() {
+        return database.query(SQLiteHelper.TABLE_FAVORITE, allColumns, null, null, null, null, null);
+    }
+
 }
