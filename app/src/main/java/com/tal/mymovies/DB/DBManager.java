@@ -76,6 +76,21 @@ public class DBManager {
         database.insertWithOnConflict(SQLiteHelper.TABLE_FAVORITE, null, cv, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
+    public void addCursorToFav(Cursor cursor) {
+        ContentValues cv = new ContentValues();
+        cv.put(SQLiteHelper.COLUMN_IMDB_ID, cursor.getString(cursor.getColumnIndex(SQLiteHelper.COLUMN_IMDB_ID)));
+        cv.put(SQLiteHelper.COLUMN_TITLE, cursor.getString(cursor.getColumnIndex(SQLiteHelper.COLUMN_TITLE)));
+        cv.put(SQLiteHelper.COLUMN_DESCRIPTION, cursor.getString(cursor.getColumnIndex(SQLiteHelper.COLUMN_DESCRIPTION)));
+        cv.put(SQLiteHelper.COLUMN_IMAGE, cursor.getString(cursor.getColumnIndex(SQLiteHelper.COLUMN_IMAGE)));
+        cv.put(SQLiteHelper.COLUMN_DURATION, cursor.getString(cursor.getColumnIndex(SQLiteHelper.COLUMN_DURATION)));
+        cv.put(SQLiteHelper.COLUMN_YEAR, cursor.getString(cursor.getColumnIndex(SQLiteHelper.COLUMN_YEAR)));
+        cv.put(SQLiteHelper.COLUMN_DIRECTOR, cursor.getString(cursor.getColumnIndex(SQLiteHelper.COLUMN_DIRECTOR)));
+        cv.put(SQLiteHelper.COLUMN_GENRE, cursor.getString(cursor.getColumnIndex(SQLiteHelper.COLUMN_GENRE)));
+        cv.put(SQLiteHelper.COLUMN_RATING, cursor.getString(cursor.getColumnIndex(SQLiteHelper.COLUMN_RATING)));
+        cv.put(SQLiteHelper.COLUMN_FAV, cursor.getInt(cursor.getColumnIndex(SQLiteHelper.COLUMN_FAV)));
+        database.insertWithOnConflict(SQLiteHelper.TABLE_FAVORITE, null, cv, SQLiteDatabase.CONFLICT_REPLACE);
+    }
+
     public boolean checkIfExsists(String imdbId) {
 //        String query = "SELECT * FROM " + SQLiteHelper.TABLE_FAVORITE
 //                + " WHERE " + SQLiteHelper.COLUMN_IMDB_ID + " = " + "'" + imdbId + "'";
@@ -99,13 +114,29 @@ public class DBManager {
         return movies;
     }
 
-    public void deleteMovie(Movie movie) {
-        int id = movie.getId();
-        database.delete(SQLiteHelper.TABLE_FAVORITE, SQLiteHelper.COLUMN_ID + " =? ", new String[]{String.valueOf(id)});
+    public void setFav(int n) {
+        ContentValues cv = new ContentValues();
+        cv.put(SQLiteHelper.COLUMN_FAV,n);
+        database.update(SQLiteHelper.TABLE_FAVORITE, cv, null, null);
     }
+
+    public void deleteMovie(Movie movie) {
+        String id = movie.getimdbId();
+        database.delete(SQLiteHelper.TABLE_FAVORITE, SQLiteHelper.COLUMN_IMDB_ID + " =? ", new String[]{id});
+    }
+
+    public void deleteMovieCursor(Cursor cursor) {
+        String id =  cursor.getString(cursor.getColumnIndex(SQLiteHelper.COLUMN_IMDB_ID));
+        database.delete(SQLiteHelper.TABLE_FAVORITE, SQLiteHelper.COLUMN_IMDB_ID + " =? ", new String[]{id});
+    }
+
 
     public void deleteAllMovies() {
         database.delete(SQLiteHelper.TABLE_MOVIES, null, null);
+    }
+
+    public void deleteAllFavs() {
+        database.delete(SQLiteHelper.TABLE_FAVORITE, null, null);
     }
 
     public Cursor getAllMoviesAsCursor() {

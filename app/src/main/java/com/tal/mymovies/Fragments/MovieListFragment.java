@@ -6,7 +6,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.view.LayoutInflater;
@@ -22,6 +21,7 @@ import com.tal.mymovies.Adapters.MoviesListAdapter;
 import com.tal.mymovies.Adapters.MoviesListCursorAdapter;
 import com.tal.mymovies.DB.DBManager;
 import com.tal.mymovies.Moduls.Movie;
+import com.tal.mymovies.MyMoviesApplication;
 import com.tal.mymovies.R;
 
 import java.util.ArrayList;
@@ -72,6 +72,7 @@ public class MovieListFragment extends Fragment {
             moviesListAdapter.clear();
             moviesListAdapter.addAll(movieList);
             adapter.notifyDataSetChanged();
+            MyMoviesApplication.getInstance().closeKeyboard();
         } else {
             MoviesListCursorAdapter moviesListCursorAdapter = (MoviesListCursorAdapter) adapter;
             moviesListCursorAdapter.swapCursor(DBManager.getInstance(getActivity()).getAllMoviesAsCursor());
@@ -101,7 +102,7 @@ public class MovieListFragment extends Fragment {
     public void initMoviesList(View view) {
 
         initMovieListType();
-
+        //String savedMoviesList = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(KEY_MOVIES_LIST, null);
         listview = (ListView) view.findViewById(R.id.listview);
         List<Movie> movies = new ArrayList<>();
 

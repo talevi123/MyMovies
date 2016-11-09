@@ -11,8 +11,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.google.android.gms.analytics.internal.zzy.b;
-
 /**
  * Created by ronen_abraham on 7/7/16.
  */

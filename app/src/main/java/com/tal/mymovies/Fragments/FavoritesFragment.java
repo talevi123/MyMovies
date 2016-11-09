@@ -1,7 +1,9 @@
 package com.tal.mymovies.Fragments;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.tal.mymovies.Activities.MovieActivity;
 import com.tal.mymovies.Adapters.FavListCursorAdapter;
 import com.tal.mymovies.DB.DBManager;
 import com.tal.mymovies.Moduls.Movie;
@@ -43,6 +46,11 @@ public class FavoritesFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Movie movie = Movie.createMovie(listView.getItemAtPosition(position));
+                Bundle bundle =new Bundle();
+                bundle.putParcelable("Movie", (Parcelable) movie);
+                Intent intent = new Intent(getActivity(),MovieActivity.class );
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
     }

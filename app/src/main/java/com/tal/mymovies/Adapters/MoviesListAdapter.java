@@ -49,11 +49,7 @@ public class MoviesListAdapter extends ArrayAdapter<Movie> {
         title.setText(movie.getTitle());
         genre.setText(movie.getGenre());
 
-        if (movie.isFavorite())
-            likeImg.setImageResource(R.drawable.ic_liked);
-        else
-            likeImg.setImageResource(R.drawable.ic_like);
-
+        likeImg.setImageResource(movie.isFavorite() ? R.drawable.ic_liked : R.drawable.ic_like);
         likeImg.setOnClickListener(new OnMovieFavClickListener(movie, likeImg));
 
         return view;
@@ -69,8 +65,8 @@ public class MoviesListAdapter extends ArrayAdapter<Movie> {
         return true;
     }
 
-    private class OnMovieFavClickListener implements View.OnClickListener {
 
+    private class OnMovieFavClickListener implements View.OnClickListener {
 
         private final Movie movie;
         private final ImageView favImage;
@@ -82,6 +78,7 @@ public class MoviesListAdapter extends ArrayAdapter<Movie> {
 
         @Override
         public void onClick(View v) {
+
             movie.setFavorie(!movie.isFavorite());
 
             if (movie.isFavorite()) {

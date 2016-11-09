@@ -23,13 +23,14 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.tal.mymovies.Adapters.PagerAdapter;
+import com.tal.mymovies.DB.DBManager;
 import com.tal.mymovies.Fragments.FavoritesFragment;
 import com.tal.mymovies.Fragments.MovieListFragment;
 import com.tal.mymovies.Moduls.Movie;
+import com.tal.mymovies.MyMoviesApplication;
 import com.tal.mymovies.Network.ApiManager;
 import com.tal.mymovies.R;
 import com.tal.mymovies.Services.ApiBroadcastThread;
@@ -77,7 +78,6 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
         setViewPager();
 
     }
-
 
     private void setViewPager() {
         tabs = (TabLayout) findViewById(R.id.tab_host);
@@ -186,6 +186,9 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
             case R.id.settings:
                 startActivity(new Intent(this, SettingsActivity.class));
                 break;
+            case R.id.clean_fav:
+                DBManager.getInstance(MyMoviesApplication.getInstance()).deleteAllFavs();
+                break;
             default:
         }
 
@@ -258,7 +261,6 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
             Intent serviceIntent = new Intent(MoviesListActivity.this, ApiService.class);
             serviceIntent.putExtras(apiServiceBundle);
             startService(serviceIntent);
-            closeKeyboard();
         }
     }
 
@@ -314,6 +316,9 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
         String api_method = resultData.getString(ApiThread.KEY_API_METHOD);
         if (api_method.equals(ApiThread.REQUEST_SEARCH_MOVIE)) {
             String jsonarry = resultData.getString(ApiThread.KEY_MOVIES);
+            //PreferenceManager
+            //        .getDefaultSharedPreferences(this)
+            //        .edit().putString(KEY_MOVIES_LIST, jsonarry).apply();
             List<Movie> movieList = parseMoviesListJson(jsonarry);
             editor.putString(KEY_MOVIES_LIST, jsonarry).apply();
             if (currentFragment instanceof MovieListFragment) {
@@ -340,16 +345,6 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
         return movies;
     }
     //////////////////////////////handler///////////////////////////////////////////
-
-    //////////////////////////////////////////closeKeyboard//////////////////////////////////////
-    public void closeKeyboard() {
-        View view = this.getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-    }
-    //////////////////////////////////////////closeKeyboard//////////////////////////////////////
 
     @Override
     protected void onStart() {

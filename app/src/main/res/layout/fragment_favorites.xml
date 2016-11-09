@@ -7,7 +7,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.tal.mymovies.Fragments.FavoritesFragment">
+    tools:context="com.tal.mymovies.Fragments.FavoritesFragment"
+    android:background="#161212">
 
     <ImageView
         android:id="@+id/fav_logo"
@@ -21,8 +22,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/fav_logo"
-        android:divider="#b5b5b5"
-        android:dividerHeight="1dp"
-        android:listSelector="@drawable/list_selector" />
+        android:listSelector="@drawable/list_selector"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="10.0sp"
+        />
 
 </RelativeLayout>

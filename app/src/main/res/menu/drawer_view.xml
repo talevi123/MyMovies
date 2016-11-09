@@ -21,5 +21,9 @@
             android:id="@+id/settings"
             android:icon="@android:drawable/ic_menu_manage"
             android:title="Settings" />
+        <item
+            android:id="@+id/clean_fav"
+            android:icon="@android:drawable/ic_delete"
+            android:title="Clean favorite" />
     </group>
 </menu>

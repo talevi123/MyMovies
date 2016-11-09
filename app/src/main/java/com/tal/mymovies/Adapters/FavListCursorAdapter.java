@@ -34,8 +34,5 @@ public class FavListCursorAdapter extends CursorAdapter {
 
         TextView title = (TextView) view.findViewById(R.id.card_title);
         title.setText(cursor.getString(cursor.getColumnIndex(SQLiteHelper.COLUMN_TITLE)));
-
-        TextView genre = (TextView) view.findViewById(R.id.card_plot);
-        genre.setText(cursor.getString(cursor.getColumnIndex(SQLiteHelper.COLUMN_DESCRIPTION)));
     }
 }

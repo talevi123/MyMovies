@@ -33,14 +33,13 @@ public class Movie {
             return new Movie((JSONObject) object);
     }
 
-    public Movie(int id, String imdbId, String title, String description, String imageUrl, String duration, String year, String director, String genre, String rating) {
-        this.id = id;
+    public Movie(String imdbId, String title, String description, String imageUrl, String duration, String year, String director, String genre, String rating) {
         this.imdbId = imdbId;
         this.title = title;
-        this.description = description;
-        this.imageUrl = imageUrl;
-        this.duration = duration;
         this.year = year;
+        this.imageUrl = imageUrl;
+        this.description = description;
+        this.duration = duration;
         this.director = director;
         this.genre = genre;
         this.rating = rating;

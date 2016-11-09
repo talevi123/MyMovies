@@ -36,12 +36,11 @@
             android:id="@+id/camBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_edit"
-            android:layout_marginTop="5dp"
             android:paddingRight="10dp"
             android:layout_below="@id/icon"
             android:drawableLeft="@android:drawable/ic_menu_camera"
             android:text="Camera"
+            android:layout_marginTop="5dp"
             android:background="#605a5a"
             android:layout_alignBottom="@+id/ratingBar"
             android:layout_alignParentStart="true" />
@@ -56,7 +55,8 @@
             android:textSize="15sp"
             android:layout_marginLeft="10dp"
             android:background="#302d2d"
-            android:textColorHint="#fdfdfd" />
+            android:textColorHint="#fdfdfd"
+            android:textColor="#c6df0b" />
 
         <EditText
             android:id="@+id/director"
@@ -69,7 +69,8 @@
             android:hint="director"
             android:textSize="15sp"
             android:background="#302d2d"
-            android:textColorHint="#fdfdfd" />
+            android:textColorHint="#fdfdfd"
+            android:textColor="#c6df0b" />
 
         <EditText
             android:id="@+id/genre"
@@ -82,7 +83,8 @@
             android:hint="Language"
             android:textSize="15sp"
             android:background="#302d2d"
-            android:textColorHint="#fdfdfd" />
+            android:textColorHint="#fdfdfd"
+            android:textColor="#c6df0b" />
 
         <EditText
             android:id="@+id/min"
@@ -95,7 +97,8 @@
             android:hint="Running time"
             android:textSize="15sp"
             android:background="#302d2d"
-            android:textColorHint="#fdfdfd" />
+            android:textColorHint="#fdfdfd"
+            android:textColor="#c6df0b" />
 
         <EditText
             android:id="@+id/r"
@@ -108,7 +111,8 @@
             android:layout_marginLeft="10dp"
             android:layout_marginBottom="10dp"
             android:background="#302d2d"
-            android:textColorHint="#fdfdfd"/>
+            android:textColorHint="#fdfdfd"
+            android:textColor="#c6df0b" />
 
         <RatingBar
             android:id="@+id/ratingBar"
@@ -117,11 +121,13 @@
             android:layout_below="@id/r"
             android:layout_toRightOf="@id/icon"
             android:layout_marginBottom="5dp"
+            android:layout_marginLeft="8dp"
             android:numStars="5"
             android:stepSize="0.5"
             android:rating="0.0"
             android:progressTint="#c9d729"
-            android:progressBackgroundTint="#faf3f3" />
+            android:progressBackgroundTint="#faf3f3"
+            style="?android:attr/ratingBarStyleIndicator"/>
 
     </RelativeLayout>
 
@@ -148,7 +154,8 @@
         android:layout_height="100dp"
         android:textSize="15sp"
         android:background="#302d2d"
-        android:textColorHint="#fdfdfd"/>
+        android:textColorHint="#fdfdfd"
+        android:textColor="#c6df0b" />
 
     <Button
         android:layout_width="wrap_content"
