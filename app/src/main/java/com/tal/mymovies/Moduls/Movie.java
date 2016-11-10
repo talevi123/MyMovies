@@ -6,10 +6,12 @@ import com.tal.mymovies.DB.SQLiteHelper;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 /**
  * Created by ronen_abraham on 6/29/16.
  */
-public class Movie {
+public class Movie implements Serializable{
     public int id;
     public String title;
     public String description;

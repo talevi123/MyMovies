@@ -45,6 +45,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.google.android.gms.analytics.internal.zzy.c;
+
 public class MoviesListActivity extends BaseActivity implements MyResultReceiver.Receiver, MovieListFragment.SearchMovieListener {
 
     private static final String TAG = "MoviesListActivity";
@@ -92,7 +94,14 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                boolean firstInitialize = currentFragment == null;
                 currentFragment = pagerAdapter.getFragment(position);
+                if (firstInitialize) {
+                    String moviesList = PreferenceManager.getDefaultSharedPreferences(MoviesListActivity.this).getString(KEY_MOVIES_LIST, null);
+                    if (moviesList != null) {
+                        updateMoviesAdapter(moviesList);
+                    }
+                }
             }
 
             @Override
@@ -312,18 +321,20 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
             progressDialog.dismiss();
         }
 
-        SharedPreferences.Editor editor = sharedPreferences.edit();
         String api_method = resultData.getString(ApiThread.KEY_API_METHOD);
         if (api_method.equals(ApiThread.REQUEST_SEARCH_MOVIE)) {
             String jsonarry = resultData.getString(ApiThread.KEY_MOVIES);
-            //PreferenceManager
-            //        .getDefaultSharedPreferences(this)
-            //        .edit().putString(KEY_MOVIES_LIST, jsonarry).apply();
-            List<Movie> movieList = parseMoviesListJson(jsonarry);
-            editor.putString(KEY_MOVIES_LIST, jsonarry).apply();
-            if (currentFragment instanceof MovieListFragment) {
-                ((MovieListFragment) currentFragment).updateListViewAdapter(movieList);
-            }
+            PreferenceManager
+                    .getDefaultSharedPreferences(this)
+                    .edit().putString(KEY_MOVIES_LIST, jsonarry).apply();
+            updateMoviesAdapter(jsonarry);
+        }
+    }
+
+    private void updateMoviesAdapter(String jsonarry) {
+        List<Movie> movieList = parseMoviesListJson(jsonarry);
+        if (currentFragment instanceof MovieListFragment) {
+            ((MovieListFragment) currentFragment).updateListViewAdapter(movieList);
         }
     }
 
@@ -335,6 +346,8 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
                 JSONObject jsonObject = jsonArray.optJSONObject(i);
                 if (jsonObject != null) {
                     Movie movie = new Movie(jsonObject);
+                    boolean isFavorite = DBManager.getInstance(MyMoviesApplication.getInstance()).checkIfExsists(movie.getimdbId());
+                    movie.setFavorie(isFavorite);
                     movies.add(movie);
                 }
             }

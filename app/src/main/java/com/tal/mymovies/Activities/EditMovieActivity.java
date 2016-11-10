@@ -89,8 +89,8 @@ public class EditMovieActivity extends AppCompatActivity {
         String getRating = rating.getText().toString();
         String getPlot = plot.getText().toString();
 
-        Long ts = System.currentTimeMillis()/1000;
-        String imdbId = ts.toString();
+        long ts = System.currentTimeMillis()/1000;
+        String imdbId = String.valueOf(ts);
 
         saveBtn = (Button) findViewById(R.id.CanBtn);
         saveBtn.setOnClickListener(new View.OnClickListener() {

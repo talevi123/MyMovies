@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:name=".MyMoviesApplication"
@@ -69,8 +70,6 @@
             android:name=".Activities.EditMovieActivity"
             android:label="@string/title_activity_edit_movie"
             android:theme="@style/AppTheme" />
-        <activity android:name=".Fragments.MovieListFragment" />
-        <activity android:name=".Fragments.FavoritesFragment"></activity>
     </application>
 
 </manifest>

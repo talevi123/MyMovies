@@ -47,7 +47,7 @@ public class FavoritesFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Movie movie = Movie.createMovie(listView.getItemAtPosition(position));
                 Bundle bundle =new Bundle();
-                bundle.putParcelable("Movie", (Parcelable) movie);
+                bundle.putSerializable("Movie", movie);
                 Intent intent = new Intent(getActivity(),MovieActivity.class );
                 intent.putExtras(bundle);
                 startActivity(intent);

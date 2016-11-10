@@ -49,7 +49,7 @@ public class MoviesListAdapter extends ArrayAdapter<Movie> {
         title.setText(movie.getTitle());
         genre.setText(movie.getGenre());
 
-        likeImg.setImageResource(movie.isFavorite() ? R.drawable.ic_liked : R.drawable.ic_like);
+        likeImg.setImageResource(movie.isFavorite() ? R.drawable.ic_liked : R.drawable.ic_unliked);
         likeImg.setOnClickListener(new OnMovieFavClickListener(movie, likeImg));
 
         return view;
@@ -86,7 +86,7 @@ public class MoviesListAdapter extends ArrayAdapter<Movie> {
                 favImage.setImageResource(R.drawable.ic_liked);
             } else {
                 DBManager.getInstance(MyMoviesApplication.getInstance()).deleteMovie(movie);
-                favImage.setImageResource(R.drawable.ic_like);
+                favImage.setImageResource(R.drawable.ic_unliked);
             }
         }
     }

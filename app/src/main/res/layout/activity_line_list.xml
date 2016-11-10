@@ -53,7 +53,7 @@
         android:layout_height="60dip"
         android:padding="8dp"
         android:layout_marginRight="10dp"
-        android:src="@drawable/ic_like"
+        android:src="@drawable/ic_unliked"
         android:layout_alignParentRight="true"
         />
 

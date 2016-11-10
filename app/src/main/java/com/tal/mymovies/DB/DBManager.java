@@ -11,6 +11,8 @@ import com.tal.mymovies.Moduls.Movie;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.google.android.gms.analytics.internal.zzy.n;
+
 /**
  * Created by ronen_abraham on 8/30/16.
  */
@@ -87,7 +89,7 @@ public class DBManager {
         cv.put(SQLiteHelper.COLUMN_DIRECTOR, cursor.getString(cursor.getColumnIndex(SQLiteHelper.COLUMN_DIRECTOR)));
         cv.put(SQLiteHelper.COLUMN_GENRE, cursor.getString(cursor.getColumnIndex(SQLiteHelper.COLUMN_GENRE)));
         cv.put(SQLiteHelper.COLUMN_RATING, cursor.getString(cursor.getColumnIndex(SQLiteHelper.COLUMN_RATING)));
-        cv.put(SQLiteHelper.COLUMN_FAV, cursor.getInt(cursor.getColumnIndex(SQLiteHelper.COLUMN_FAV)));
+        cv.put(SQLiteHelper.COLUMN_FAV, 1);
         database.insertWithOnConflict(SQLiteHelper.TABLE_FAVORITE, null, cv, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
@@ -114,10 +116,10 @@ public class DBManager {
         return movies;
     }
 
-    public void setFav(int n) {
+    public void setFav(int movieId, int isLiked) {
         ContentValues cv = new ContentValues();
-        cv.put(SQLiteHelper.COLUMN_FAV,n);
-        database.update(SQLiteHelper.TABLE_FAVORITE, cv, null, null);
+        cv.put(SQLiteHelper.COLUMN_FAV,isLiked);
+        database.update(SQLiteHelper.TABLE_MOVIES, cv, null, null);
     }
 
     public void deleteMovie(Movie movie) {

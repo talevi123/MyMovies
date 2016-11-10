@@ -20,8 +20,11 @@ import com.tal.mymovies.R;
  */
 public class MoviesListCursorAdapter extends CursorAdapter {
 
+    private Context context;
+
     public MoviesListCursorAdapter(Context context, Cursor cursor) {
         super(context, cursor, true);
+        this.context = context;
     }
 
     @Override
@@ -42,36 +45,32 @@ public class MoviesListCursorAdapter extends CursorAdapter {
 
         ImageView likeImg = (ImageView) view.findViewById(R.id.likeImageView);
 
-        likeImg.setImageResource(cursor.getInt(cursor.getColumnIndex(SQLiteHelper.COLUMN_FAV)) == 1 ? R.drawable.ic_liked : R.drawable.ic_like );
-        likeImg.setOnClickListener(new OnMovieFavClickListener(cursor, likeImg));
+        likeImg.setImageResource(cursor.getInt(cursor.getColumnIndex(SQLiteHelper.COLUMN_FAV)) == 1 ? R.drawable.ic_liked : R.drawable.ic_unliked);
+        likeImg.setOnClickListener(new OnMovieFavClickListener(cursor));
 
     }
 
     private class OnMovieFavClickListener implements View.OnClickListener {
 
         private Cursor cursor;
-        private ImageView favImage;
 
-        public OnMovieFavClickListener(Cursor cursor, ImageView favImage) {
+        public OnMovieFavClickListener(Cursor cursor) {
             this.cursor = cursor;
-            this.favImage = favImage;
         }
 
         @Override
         public void onClick(View view) {
 
-            if(cursor.getInt(cursor.getColumnIndex(SQLiteHelper.COLUMN_FAV))==1)
-                DBManager.getInstance(MyMoviesApplication.getInstance()).setFav(0);
-            else
-                DBManager.getInstance(MyMoviesApplication.getInstance()).setFav(1);
-
-            if (cursor.getInt(cursor.getColumnIndex(SQLiteHelper.COLUMN_FAV))==1) {
-                DBManager.getInstance(MyMoviesApplication.getInstance()).addCursorToFav(cursor);
-                favImage.setImageResource(R.drawable.ic_liked);
+            int movieId = cursor.getInt(cursor.getColumnIndex(SQLiteHelper.COLUMN_ID));
+            if (cursor.getInt(cursor.getColumnIndex(SQLiteHelper.COLUMN_FAV)) == 1) {
+                DBManager.getInstance(context).setFav(movieId, 0);
+                DBManager.getInstance(context).deleteMovieCursor(cursor);
             } else {
-                DBManager.getInstance(MyMoviesApplication.getInstance()).deleteMovieCursor(cursor);
-                favImage.setImageResource(R.drawable.ic_like);
+                DBManager.getInstance(context).addCursorToFav(cursor);
+                DBManager.getInstance(context).setFav(movieId, 1);
             }
+
+            swapCursor(DBManager.getInstance(context).getAllMoviesAsCursor());
         }
     }
 }
