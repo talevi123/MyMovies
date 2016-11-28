@@ -61,7 +61,7 @@
         android:text="Login"
         android:backgroundTint="#4b93ed" />
 
-    <TextView android:id="@+id/link_signup"
+    <TextView android:id="@+id/link_sign_up"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"

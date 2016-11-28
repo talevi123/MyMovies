@@ -1,11 +1,12 @@
 package com.tal.mymovies.Activities;
 
 import android.content.Intent;
+//import android.graphics.Movie;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-
+import com.tal.mymovies.Moduls.Movie;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
@@ -37,24 +38,17 @@ public class MovieActivity extends YouTubeBaseActivity {
         RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);
 
         Intent i = getIntent();
-        String getTitle = i.getStringExtra("title");
-        String getDescription = i.getStringExtra("description");
-        String getImageurl = i.getStringExtra("imageUrl");
-        String getDirector = i.getStringExtra("director");
-        String getYear = i.getStringExtra("year");
-        String getMin = i.getStringExtra("min");
-        String getGenre = i.getStringExtra("genre");
-        String getRating = i.getStringExtra("rating");
+        Movie movie = (Movie) i.getExtras().getSerializable("Movie");
 
-        title.setText(getTitle);
-        description.setText(getDescription);
-        director.setText(getDirector + " (" + getYear + ")");
-        min.setText(getMin);
-        genre.setText(getGenre);
-        rating.setText(getRating);
-        Picasso.with(this).load(getImageurl).into(image);
+        title.setText(movie.getTitle());
+        description.setText(movie.getDescription());
+        director.setText(movie.getDirector() + " (" + movie.getYear() + ")");
+        min.setText(movie.getDuration());
+        genre.setText(movie.getGenre());
+        rating.setText(movie.getRating());
+        Picasso.with(this).load(movie.getImageUrl()).into(image);
 
-        final String video_id = getIntent().getStringExtra("VIDEO_ID");
+        final String video_id = movie.getVideoId();
         onInitializedListener = new YouTubePlayer.OnInitializedListener() {
             @Override
             public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {

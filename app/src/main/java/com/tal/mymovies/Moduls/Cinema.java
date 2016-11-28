@@ -1,64 +1,27 @@
 package com.tal.mymovies.Moduls;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.List;
+public class Cinema {
+    public String name;
+    public String vicinity;
+    public String latitude;
+    public String longitude;
 
-import static android.os.Build.VERSION_CODES.M;
 
-/**
- * Created by ronen_abraham on 11/9/16.
- */
-
-public class Cinema implements Parcelable {
-
-    private long id;
-    private String name;
-    private String address;
-    private List<Movie> movies;
-
-    public Cinema(JSONObject jsonObject) {
-
+    public Cinema(JSONObject jsonObject) throws JSONException {
+        this.name = jsonObject.optString("name");
+        this.vicinity = jsonObject.optString("vicinity");
+        this.latitude = jsonObject.getJSONObject("geometry").getJSONObject("location").getString("lat");
+        this.longitude = jsonObject.getJSONObject("geometry").getJSONObject("location").getString("lng");
     }
 
-    protected Cinema(Parcel in) {
-        id = in.readLong();
-        name = in.readString();
-        address = in.readString();
-        int moviesSize = in.readInt();
-        for (int i = 0; i < moviesSize; i++) {
-            movies.add((Movie) in.readSerializable());
-        }
-    }
+    public String getName(){return name;}
 
-    public static final Creator<Cinema> CREATOR = new Creator<Cinema>() {
-        @Override
-        public Cinema createFromParcel(Parcel in) {
-            return new Cinema(in);
-        }
+    public String getVicinity(){return vicinity;}
 
-        @Override
-        public Cinema[] newArray(int size) {
-            return new Cinema[size];
-        }
-    };
+    public String getLatitude(){return latitude;}
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(id);
-        dest.writeString(name);
-        dest.writeString(address);
-        dest.writeInt(movies.size());
-        for (Movie movie : movies) {
-            dest.writeSerializable(movie);
-        }
-    }
+    public String getLongitude(){return longitude;}
 }

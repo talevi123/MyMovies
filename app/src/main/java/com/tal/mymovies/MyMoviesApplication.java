@@ -41,4 +41,6 @@ public class MyMoviesApplication extends Application {
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
+
+
 }

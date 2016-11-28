@@ -7,4 +7,12 @@
         android:icon="@drawable/ic_sync_black_24dp"
         android:title="@string/pref_header_adapters"/>
 
+    <header
+        android:fragment="com.tal.mymovies.Activities.SettingsActivity$ClearFavPreferenceFragment"
+        android:icon="@android:drawable/ic_delete"
+        android:title="@string/clear_fav"/>
+
 </preference-headers>
+
+
+

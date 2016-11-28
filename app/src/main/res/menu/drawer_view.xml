@@ -25,5 +25,11 @@
             android:id="@+id/clean_fav"
             android:icon="@android:drawable/ic_delete"
             android:title="Clean favorite" />
+
+        <item
+            android:id="@+id/find_cinemas"
+            android:icon="@android:drawable/ic_dialog_map"
+            android:title="@string/find_cinemas" />
+
     </group>
 </menu>

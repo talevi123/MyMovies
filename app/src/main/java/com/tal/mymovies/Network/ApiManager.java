@@ -1,6 +1,7 @@
 package com.tal.mymovies.Network;
 
 import com.tal.mymovies.DB.DBManager;
+import com.tal.mymovies.Moduls.Cinema;
 import com.tal.mymovies.Moduls.Movie;
 import com.tal.mymovies.MyMoviesApplication;
 
@@ -20,6 +21,11 @@ public class ApiManager {
     private static final String PARAM_S = "s=";
     private static final String PARAM_I = "i=";
     private static final String URL_SUFFIX = "&r=json&type=movie";
+
+    ///maps url
+    private static final String GOOGLEAPIS_URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
+    private static final String PARAM_LOCATION = "location=";
+    private static final String GOOGLEAPIS_URL_SUFFIX = "&radius=10000&type=movie_theater&key=AIzaSyATr2XSq3M131wcpRiSTMkOLNy5hcHao_M";
 
 
     public static List<Movie> searchMovie(String title) {
@@ -63,10 +69,37 @@ public class ApiManager {
         return null;
     }
 
+    public static List<Cinema> getPlaces(String url) {
+        String result = ConnectionManager.sendGetRequest(url);
+        if(result != null) {
+            List<Cinema> cinemas = new ArrayList<>();
+            try {
+                JSONObject jsonObject = new JSONObject(result);
+                JSONArray jsonArray = jsonObject.optJSONArray("results");
+                if (jsonArray != null) {
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        Cinema cinema = new Cinema(jsonArray.optJSONObject(i));
+                        cinemas.add(cinema);
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return cinemas;
+        }
+        return null;
+    }
+
     private static String getId(String title) {
         String ans = Youtubeconnector.getInstance().search(title);
         return ans;
     }
 
+    public static String getUrl(double latitude, double longitude){
+        String location = PARAM_LOCATION + latitude + "," + longitude;
+        return (GOOGLEAPIS_URL + location + GOOGLEAPIS_URL_SUFFIX).toString();
+    }
 
 }
+
+

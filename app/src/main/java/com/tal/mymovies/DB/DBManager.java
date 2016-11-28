@@ -11,8 +11,6 @@ import com.tal.mymovies.Moduls.Movie;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.google.android.gms.analytics.internal.zzy.n;
-
 /**
  * Created by ronen_abraham on 8/30/16.
  */
@@ -26,6 +24,11 @@ public class DBManager {
             SQLiteHelper.COLUMN_DESCRIPTION, SQLiteHelper.COLUMN_IMAGE, SQLiteHelper.COLUMN_DURATION,
             SQLiteHelper.COLUMN_YEAR, SQLiteHelper.COLUMN_DIRECTOR, SQLiteHelper.COLUMN_GENRE,
             SQLiteHelper.COLUMN_RATING, SQLiteHelper.COLUMN_FAV};
+
+    private String[] allFavColumns = {SQLiteHelper.COLUMN_ID, SQLiteHelper.COLUMN_IMDB_ID, SQLiteHelper.COLUMN_TITLE,
+            SQLiteHelper.COLUMN_DESCRIPTION, SQLiteHelper.COLUMN_IMAGE, SQLiteHelper.COLUMN_DURATION,
+            SQLiteHelper.COLUMN_YEAR, SQLiteHelper.COLUMN_DIRECTOR, SQLiteHelper.COLUMN_GENRE,
+            SQLiteHelper.COLUMN_RATING, SQLiteHelper.COLUMN_FAV, SQLiteHelper.COLUMN_BITMAP};
 
     public static DBManager getInstance(Context context) {
         if (instance == null) {
@@ -74,6 +77,7 @@ public class DBManager {
         cv.put(SQLiteHelper.COLUMN_DIRECTOR, movie.getDirector());
         cv.put(SQLiteHelper.COLUMN_GENRE, movie.getGenre());
         cv.put(SQLiteHelper.COLUMN_RATING, movie.getRating());
+        cv.put(SQLiteHelper.COLUMN_BITMAP, movie.getImage());
         cv.put(SQLiteHelper.COLUMN_FAV, movie.isFavorite() ? 1 : 0);
         database.insertWithOnConflict(SQLiteHelper.TABLE_FAVORITE, null, cv, SQLiteDatabase.CONFLICT_REPLACE);
     }
@@ -119,7 +123,7 @@ public class DBManager {
     public void setFav(int movieId, int isLiked) {
         ContentValues cv = new ContentValues();
         cv.put(SQLiteHelper.COLUMN_FAV,isLiked);
-        database.update(SQLiteHelper.TABLE_MOVIES, cv, null, null);
+        database.update(SQLiteHelper.TABLE_MOVIES, cv, SQLiteHelper.COLUMN_ID + " =? ", new String[]{ String.valueOf(movieId)});
     }
 
     public void deleteMovie(Movie movie) {
@@ -146,7 +150,7 @@ public class DBManager {
     }
 
     public Cursor getAllFavMoviesAsCursor() {
-        return database.query(SQLiteHelper.TABLE_FAVORITE, allColumns, null, null, null, null, null);
+        return database.query(SQLiteHelper.TABLE_FAVORITE, allFavColumns, null, null, null, null, null);
     }
 
 }

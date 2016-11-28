@@ -8,11 +8,14 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
+import com.tal.mymovies.DB.DBManager;
+import com.tal.mymovies.MyMoviesApplication;
 import com.tal.mymovies.R;
 
 import java.util.List;
@@ -96,7 +99,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
     protected boolean isValidFragment(String fragmentName) {
         return PreferenceFragment.class.getName().equals(fragmentName)
-                || AdaptersPreferenceFragment.class.getName().equals(fragmentName);
+                || AdaptersPreferenceFragment.class.getName().equals(fragmentName)
+                || ClearFavPreferenceFragment.class.getName().equals(fragmentName);
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -119,4 +123,40 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             return super.onOptionsItemSelected(item);
         }
     }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public static class ClearFavPreferenceFragment extends PreferenceFragment {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.pref_clear_fav);
+            setHasOptionsMenu(true);
+            bindPreferenceSummaryToValue(findPreference("clear_favorites_list"));
+
+            PreferenceCategory perfBtn = (PreferenceCategory) findPreference("clear_favorites_list");
+            perfBtn.setLayoutResource(R.layout.clear_fav);
+
+            perfBtn.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    DBManager.getInstance(MyMoviesApplication.getInstance()).deleteAllFavs();
+                    return false;
+                }
+            });
+        }
+
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+            int id = item.getItemId();
+            if (id == android.R.id.home) {
+                startActivity(new Intent(getActivity(), SettingsActivity.class));
+                return true;
+            }
+            return super.onOptionsItemSelected(item);
+        }
+    }
 }
+
+
+//AIzaSyA08ZJuM7DvDg0uuJI1bNRwXQpCQ5gzEWo
+//D2:53:D3:05:BA:42:DB:99:A4:3C:B2:C2:79:26:26:C2:45:93:3C:82

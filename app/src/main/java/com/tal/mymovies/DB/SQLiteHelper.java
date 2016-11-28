@@ -44,6 +44,8 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public static final String COLUMN_GENRE = "genre";
     public static final String COLUMN_RATING = "rating";
     public static final String COLUMN_FAV = "fav";
+    public static final String COLUMN_BITMAP = "bitmap";
+
 
     private static final String CREATE_MOVIES_TABLE = "CREATE TABLE " + TABLE_MOVIES +
             " ( " +
@@ -72,7 +74,8 @@ public class SQLiteHelper extends SQLiteOpenHelper {
             COLUMN_DIRECTOR + " TEXT," +
             COLUMN_GENRE + " TEXT," +
             COLUMN_RATING + " TEXT," +
-            COLUMN_FAV + " INTEGER" +
+            COLUMN_FAV + " INTEGER," +
+            COLUMN_BITMAP + " BLOB" +
             " )";
 
 

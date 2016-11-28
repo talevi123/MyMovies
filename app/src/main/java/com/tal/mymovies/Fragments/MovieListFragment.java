@@ -1,7 +1,6 @@
 package com.tal.mymovies.Fragments;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -31,7 +30,6 @@ public class MovieListFragment extends Fragment {
 
     private BaseAdapter adapter;
     private EditText searchBox;
-    ProgressDialog progressDialog;
     private ListView listview;
     SearchMovieListener searchMovieListener;
     private String moviesListAdapterType;
@@ -77,10 +75,6 @@ public class MovieListFragment extends Fragment {
             MoviesListCursorAdapter moviesListCursorAdapter = (MoviesListCursorAdapter) adapter;
             moviesListCursorAdapter.swapCursor(DBManager.getInstance(getActivity()).getAllMoviesAsCursor());
         }
-
-        if (progressDialog != null) {
-            progressDialog.dismiss();
-        }
     }
 
     private void initSearchButton(View view) {
@@ -90,7 +84,6 @@ public class MovieListFragment extends Fragment {
             searchBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    progressDialog = ProgressDialog.show(getActivity(), "", "Loading...");
                     if (searchBox != null && searchBox.getText() != null && searchBox.getText().length() > 0) {
                         searchMovieListener.searchMovie((searchBox.getText().toString()));
                     }
@@ -118,7 +111,6 @@ public class MovieListFragment extends Fragment {
             listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                    progressDialog = ProgressDialog.show(getActivity(), "", "Loading...");
                     Movie movie = Movie.createMovie(listview.getItemAtPosition(position));
                     searchMovieListener.initMovie(movie.getimdbId());
                 }

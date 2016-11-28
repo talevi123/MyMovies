@@ -1,6 +1,5 @@
 package com.tal.mymovies.Activities;
 
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -45,8 +44,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.google.android.gms.analytics.internal.zzy.c;
-
 public class MoviesListActivity extends BaseActivity implements MyResultReceiver.Receiver, MovieListFragment.SearchMovieListener {
 
     private static final String TAG = "MoviesListActivity";
@@ -54,7 +51,7 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
     public static final String EVENT_NETWORK_DATA_READY = "com.tal.mymovies.NETWORK_DATA_READY";
 
     private MyResultReceiver resultReceiver;
-    ProgressDialog progressDialog;
+    //ProgressDialog progressDialog;
     SharedPreferences sharedPreferences;
     public static final String KEY_MOVIES_LIST = "moviesList";
     private BroadcastReceiver listDataBradcastReceiver;
@@ -75,7 +72,6 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
 
         initListDataBroadcastReceiver();
         initNavigationMenu();
-        initMoviesList();
         floatBtn();
         setViewPager();
 
@@ -97,7 +93,8 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
                 boolean firstInitialize = currentFragment == null;
                 currentFragment = pagerAdapter.getFragment(position);
                 if (firstInitialize) {
-                    String moviesList = PreferenceManager.getDefaultSharedPreferences(MoviesListActivity.this).getString(KEY_MOVIES_LIST, null);
+                    String moviesList = PreferenceManager.getDefaultSharedPreferences(MoviesListActivity.this)
+                                        .getString(KEY_MOVIES_LIST, null);
                     if (moviesList != null) {
                         updateMoviesAdapter(moviesList);
                     }
@@ -198,6 +195,8 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
             case R.id.clean_fav:
                 DBManager.getInstance(MyMoviesApplication.getInstance()).deleteAllFavs();
                 break;
+            case R.id.find_cinemas:
+                startActivity(new Intent(this, MapsActivity.class));
             default:
         }
 
@@ -244,7 +243,7 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
 
     private void bradcastButton(String searchBoxInput) {
         if (searchBoxInput != null) {
-            progressDialog = ProgressDialog.show(MoviesListActivity.this, "", "Loading...");
+            //progressDialog = ProgressDialog.show(MoviesListActivity.this, "", "Loading...");
             Bundle bundle = new Bundle();
             bundle.putString(ApiThread.KEY_API_METHOD, ApiThread.REQUEST_SEARCH_MOVIE);
             bundle.putString(ApiThread.KEY_SEARCH, searchBoxInput);
@@ -261,7 +260,7 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
     private void serviceButton(String searchBoxInput) {
         if (searchBoxInput != null) {
             resultReceiver = new MyResultReceiver(new Handler(), this);
-            progressDialog = ProgressDialog.show(MoviesListActivity.this, "", "Loading...");
+            //progressDialog = ProgressDialog.show(MoviesListActivity.this, "", "Loading...");
 
             Bundle apiServiceBundle = new Bundle();
             apiServiceBundle.putParcelable(ApiService.KEY_RECEIVER, resultReceiver);
@@ -284,14 +283,14 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
 
     private void handlerPostbutton() {
         final Handler handler = new Handler();
-        progressDialog = ProgressDialog.show(MoviesListActivity.this, "", "Loading...");
+        //progressDialog = ProgressDialog.show(MoviesListActivity.this, "", "Loading...");
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 Toast.makeText(MoviesListActivity.this, "This is a delay message", Toast.LENGTH_SHORT).show();
             }
         }, 5 * 1000);
-        progressDialog.dismiss();
+        //progressDialog.dismiss();
     }
     ////////////
 
@@ -305,7 +304,7 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
                 }
             };
 
-            progressDialog = ProgressDialog.show(MoviesListActivity.this, "", "Loading...");
+            //progressDialog = ProgressDialog.show(MoviesListActivity.this, "", "Loading...");
             Bundle bundle = new Bundle();
             bundle.putString(ApiThread.KEY_API_METHOD, ApiThread.REQUEST_SEARCH_MOVIE);
             bundle.putString(ApiThread.KEY_SEARCH, searchBoxInput);
@@ -317,24 +316,30 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
 
 
     public void handlerServerResponse(Bundle resultData) {
-        if (progressDialog != null) {
-            progressDialog.dismiss();
-        }
 
         String api_method = resultData.getString(ApiThread.KEY_API_METHOD);
         if (api_method.equals(ApiThread.REQUEST_SEARCH_MOVIE)) {
             String jsonarry = resultData.getString(ApiThread.KEY_MOVIES);
             PreferenceManager
-                    .getDefaultSharedPreferences(this)
+                    .getDefaultSharedPreferences(MoviesListActivity.this)
                     .edit().putString(KEY_MOVIES_LIST, jsonarry).apply();
             updateMoviesAdapter(jsonarry);
         }
+    }
+
+    public void putSerializable(Movie movie) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("Movie", movie);
+        Intent intent = new Intent(MoviesListActivity.this, MovieActivity.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
     private void updateMoviesAdapter(String jsonarry) {
         List<Movie> movieList = parseMoviesListJson(jsonarry);
         if (currentFragment instanceof MovieListFragment) {
             ((MovieListFragment) currentFragment).updateListViewAdapter(movieList);
+            //progressDialog.dismiss();
         }
     }
 
@@ -388,6 +393,7 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
             if (movies != null) {
                 if (currentFragment instanceof MovieListFragment) {
                     ((MovieListFragment) currentFragment).updateListViewAdapter(movies);
+                    //progressDialog.dismiss();
                 }
             }
         }
@@ -402,24 +408,7 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
 
         @Override
         protected void onPostExecute(Movie m) {
-            Intent intent = new Intent(MoviesListActivity.this, MovieActivity.class);
-            intent.putExtra("VIDEO_ID", m.getVideoId());
-            intent.putExtra("title", m.getTitle());
-            intent.putExtra("description", m.getDescription());
-            intent.putExtra("director", m.getDirector());
-            intent.putExtra("genre", m.getGenre());
-            intent.putExtra("year", m.getYear());
-            intent.putExtra("min", m.getDuration());
-            intent.putExtra("rating", m.getRating());
-            intent.putExtra("imageUrl", m.getImageUrl());
-            startActivity(intent);
+            putSerializable(m);
         }
     }
-
-    /////////////////////
-
-    private void initMoviesList() {
-        String savedMoviesList = sharedPreferences.getString(KEY_MOVIES_LIST, null);
-    }
-
 }

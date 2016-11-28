@@ -12,6 +12,7 @@ import java.io.Serializable;
  * Created by ronen_abraham on 6/29/16.
  */
 public class Movie implements Serializable{
+    private static final long serialVersionUID = 1L;
     public int id;
     public String title;
     public String description;
@@ -24,6 +25,7 @@ public class Movie implements Serializable{
     public String rating;
     public String videoId;
     public boolean favorite;
+    public byte[] image;
 
 
     public static Movie createMovie(Object object) {
@@ -35,11 +37,11 @@ public class Movie implements Serializable{
             return new Movie((JSONObject) object);
     }
 
-    public Movie(String imdbId, String title, String description, String imageUrl, String duration, String year, String director, String genre, String rating) {
+    public Movie(String imdbId, String title, String description, byte[] image, String duration, String year, String director, String genre, String rating) {
         this.imdbId = imdbId;
         this.title = title;
         this.year = year;
-        this.imageUrl = imageUrl;
+        this.image = image;
         this.description = description;
         this.duration = duration;
         this.director = director;
@@ -123,6 +125,8 @@ public class Movie implements Serializable{
     public String getRating() {
         return rating;
     }
+
+    public byte[] getImage() { return image; }
 
 
     @Override

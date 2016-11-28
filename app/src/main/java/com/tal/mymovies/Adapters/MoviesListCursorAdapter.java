@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.tal.mymovies.DB.DBManager;
 import com.tal.mymovies.DB.SQLiteHelper;
-import com.tal.mymovies.MyMoviesApplication;
 import com.tal.mymovies.R;
 
 /**
@@ -46,7 +45,7 @@ public class MoviesListCursorAdapter extends CursorAdapter {
         ImageView likeImg = (ImageView) view.findViewById(R.id.likeImageView);
 
         likeImg.setImageResource(cursor.getInt(cursor.getColumnIndex(SQLiteHelper.COLUMN_FAV)) == 1 ? R.drawable.ic_liked : R.drawable.ic_unliked);
-        likeImg.setOnClickListener(new OnMovieFavClickListener(cursor));
+       // likeImg.setOnClickListener(new OnMovieFavClickListener(cursor));
 
     }
 
