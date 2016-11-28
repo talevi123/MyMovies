@@ -71,7 +71,7 @@ public class ApiManager {
 
     public static List<Cinema> getPlaces(String url) {
         String result = ConnectionManager.sendGetRequest(url);
-        if(result != null) {
+        if (result != null) {
             List<Cinema> cinemas = new ArrayList<>();
             try {
                 JSONObject jsonObject = new JSONObject(result);
@@ -95,7 +95,7 @@ public class ApiManager {
         return ans;
     }
 
-    public static String getUrl(double latitude, double longitude){
+    public static String getUrl(double latitude, double longitude) {
         String location = PARAM_LOCATION + latitude + "," + longitude;
         return (GOOGLEAPIS_URL + location + GOOGLEAPIS_URL_SUFFIX).toString();
     }

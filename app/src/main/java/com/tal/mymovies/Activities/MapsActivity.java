@@ -38,7 +38,7 @@ import java.util.List;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener{
+        LocationListener {
 
     GoogleMap map;
     GoogleApiClient googleApiClient;
@@ -71,19 +71,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 buildGoogleApiClient();
                 map.setMyLocationEnabled(true);
             }
-        }
-        else {
+        } else {
             buildGoogleApiClient();
             map.setMyLocationEnabled(true);
         }
-        String url = ApiManager.getUrl(latitude,longitude);
-        new SearchCinema().execute(url);
+
+        if (locationRequest != null) {
+            showCloseTheaters();
+        }
+
     }
 
     @Override
     public void onLocationChanged(Location location) {
         lastLocation = location;
-        if(markerCurrentLocation != null){
+        if (markerCurrentLocation != null) {
             markerCurrentLocation.remove();
         }
 
@@ -115,11 +117,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         locationRequest.setInterval(1000);
         locationRequest.setFastestInterval(1000);
         locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-        if(ContextCompat.checkSelfPermission(this,
+        if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
+            Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                    googleApiClient);
+            if (mLastLocation != null) {
+                latitude = mLastLocation.getLatitude();
+                longitude = mLastLocation.getLongitude();
+            }
         }
+
+        if (map != null) {
+            showCloseTheaters();
+        }
+    }
+
+    private void showCloseTheaters() {
+        String url = ApiManager.getUrl(latitude, longitude);
+        new SearchCinema().execute(url);
     }
 
     @Override
@@ -154,7 +171,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void ShowNearbyPlaces(List<Cinema> cinemas) {
-        for(int i=0; i<cinemas.size(); i++) {
+        for (int i = 0; i < cinemas.size(); i++) {
             Cinema cinema = cinemas.get(i);
             double lat = Double.parseDouble(cinema.getLatitude());
             double lng = Double.parseDouble(cinema.getLongitude());
@@ -162,9 +179,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             String vicinity = cinema.getVicinity();
             LatLng latLng = new LatLng(lat, lng);
             map.addMarker(new MarkerOptions()
-                        .position(latLng)
-                        .title(placeName + " : " + vicinity)
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+                    .position(latLng)
+                    .title(placeName + " : " + vicinity)
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
             map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             map.animateCamera(CameraUpdateFactory.zoomTo(12));
         }
@@ -173,7 +190,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public class SearchCinema extends AsyncTask<String, Void, List<Cinema>> {
 
         @Override
-        protected List<Cinema> doInBackground(String... strings) {return ApiManager.getPlaces(strings[0]);}
+        protected List<Cinema> doInBackground(String... strings) {
+            return ApiManager.getPlaces(strings[0]);
+        }
 
         @Override
         protected void onPostExecute(List<Cinema> cinemas) {

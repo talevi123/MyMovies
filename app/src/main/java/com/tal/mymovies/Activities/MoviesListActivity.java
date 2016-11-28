@@ -1,5 +1,6 @@
 package com.tal.mymovies.Activities;
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -51,7 +52,7 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
     public static final String EVENT_NETWORK_DATA_READY = "com.tal.mymovies.NETWORK_DATA_READY";
 
     private MyResultReceiver resultReceiver;
-    //ProgressDialog progressDialog;
+    ProgressDialog progressDialog;
     SharedPreferences sharedPreferences;
     public static final String KEY_MOVIES_LIST = "moviesList";
     private BroadcastReceiver listDataBradcastReceiver;
@@ -94,7 +95,7 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
                 currentFragment = pagerAdapter.getFragment(position);
                 if (firstInitialize) {
                     String moviesList = PreferenceManager.getDefaultSharedPreferences(MoviesListActivity.this)
-                                        .getString(KEY_MOVIES_LIST, null);
+                            .getString(KEY_MOVIES_LIST, null);
                     if (moviesList != null) {
                         updateMoviesAdapter(moviesList);
                     }
@@ -243,7 +244,7 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
 
     private void bradcastButton(String searchBoxInput) {
         if (searchBoxInput != null) {
-            //progressDialog = ProgressDialog.show(MoviesListActivity.this, "", "Loading...");
+            showProgressDialog();
             Bundle bundle = new Bundle();
             bundle.putString(ApiThread.KEY_API_METHOD, ApiThread.REQUEST_SEARCH_MOVIE);
             bundle.putString(ApiThread.KEY_SEARCH, searchBoxInput);
@@ -260,7 +261,7 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
     private void serviceButton(String searchBoxInput) {
         if (searchBoxInput != null) {
             resultReceiver = new MyResultReceiver(new Handler(), this);
-            //progressDialog = ProgressDialog.show(MoviesListActivity.this, "", "Loading...");
+            showProgressDialog();
 
             Bundle apiServiceBundle = new Bundle();
             apiServiceBundle.putParcelable(ApiService.KEY_RECEIVER, resultReceiver);
@@ -270,6 +271,10 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
             serviceIntent.putExtras(apiServiceBundle);
             startService(serviceIntent);
         }
+    }
+
+    private void showProgressDialog() {
+        progressDialog = ProgressDialog.show(MoviesListActivity.this, "", "Loading...");
     }
 
     @Override
@@ -283,14 +288,14 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
 
     private void handlerPostbutton() {
         final Handler handler = new Handler();
-        //progressDialog = ProgressDialog.show(MoviesListActivity.this, "", "Loading...");
+        showProgressDialog();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 Toast.makeText(MoviesListActivity.this, "This is a delay message", Toast.LENGTH_SHORT).show();
             }
         }, 5 * 1000);
-        //progressDialog.dismiss();
+        progressDialog.dismiss();
     }
     ////////////
 
@@ -304,7 +309,7 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
                 }
             };
 
-            //progressDialog = ProgressDialog.show(MoviesListActivity.this, "", "Loading...");
+            showProgressDialog();
             Bundle bundle = new Bundle();
             bundle.putString(ApiThread.KEY_API_METHOD, ApiThread.REQUEST_SEARCH_MOVIE);
             bundle.putString(ApiThread.KEY_SEARCH, searchBoxInput);
@@ -339,7 +344,9 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
         List<Movie> movieList = parseMoviesListJson(jsonarry);
         if (currentFragment instanceof MovieListFragment) {
             ((MovieListFragment) currentFragment).updateListViewAdapter(movieList);
-            //progressDialog.dismiss();
+            if (progressDialog != null) {
+                progressDialog.dismiss();
+            }
         }
     }
 
@@ -384,16 +391,21 @@ public class MoviesListActivity extends BaseActivity implements MyResultReceiver
     public class SearchMoviesTask extends AsyncTask<String, Void, List<Movie>> {
 
         @Override
+        protected void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
         protected List<Movie> doInBackground(String... params) {
             return ApiManager.searchMovie(params[0]);
         }
 
         @Override
         protected void onPostExecute(List<Movie> movies) {
+            progressDialog.dismiss();
             if (movies != null) {
                 if (currentFragment instanceof MovieListFragment) {
                     ((MovieListFragment) currentFragment).updateListViewAdapter(movies);
-                    //progressDialog.dismiss();
                 }
             }
         }

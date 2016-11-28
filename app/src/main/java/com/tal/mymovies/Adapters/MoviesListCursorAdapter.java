@@ -45,16 +45,17 @@ public class MoviesListCursorAdapter extends CursorAdapter {
         ImageView likeImg = (ImageView) view.findViewById(R.id.likeImageView);
 
         likeImg.setImageResource(cursor.getInt(cursor.getColumnIndex(SQLiteHelper.COLUMN_FAV)) == 1 ? R.drawable.ic_liked : R.drawable.ic_unliked);
-       // likeImg.setOnClickListener(new OnMovieFavClickListener(cursor));
-
+        likeImg.setOnClickListener(new OnMovieFavClickListener(cursor, likeImg));
     }
 
     private class OnMovieFavClickListener implements View.OnClickListener {
 
+        private final ImageView likeImg;
         private Cursor cursor;
 
-        public OnMovieFavClickListener(Cursor cursor) {
+        public OnMovieFavClickListener(Cursor cursor, ImageView likeImg) {
             this.cursor = cursor;
+            this.likeImg = likeImg;
         }
 
         @Override
@@ -64,12 +65,12 @@ public class MoviesListCursorAdapter extends CursorAdapter {
             if (cursor.getInt(cursor.getColumnIndex(SQLiteHelper.COLUMN_FAV)) == 1) {
                 DBManager.getInstance(context).setFav(movieId, 0);
                 DBManager.getInstance(context).deleteMovieCursor(cursor);
+                likeImg.setImageResource(R.drawable.ic_unliked);
             } else {
                 DBManager.getInstance(context).addCursorToFav(cursor);
                 DBManager.getInstance(context).setFav(movieId, 1);
+                likeImg.setImageResource(R.drawable.ic_liked);
             }
-
-            swapCursor(DBManager.getInstance(context).getAllMoviesAsCursor());
         }
     }
 }

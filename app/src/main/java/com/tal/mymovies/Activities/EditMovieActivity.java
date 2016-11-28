@@ -88,33 +88,31 @@ public class EditMovieActivity extends AppCompatActivity {
     }
 
     private void edit (){
-        EditText title = (EditText) findViewById(R.id.title);
-        EditText director = (EditText) findViewById(R.id.director);
-        EditText genre = (EditText) findViewById(R.id.genre);
-        EditText min = (EditText) findViewById(R.id.min);
-        EditText rating = (EditText) findViewById(R.id.r);
-        EditText plot = (EditText) findViewById(R.id.plot);
-
-        String getTitle = title.getText().toString();
-        String getDirector = director.getText().toString();
-        String getGenre = genre.getText().toString();
-        String getMin = min.getText().toString();
-        String getRating = rating.getText().toString();
-        String getPlot = plot.getText().toString();
-
-        long ts = System.currentTimeMillis()/10000;
-        String imdbId = String.valueOf(ts);
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        Bitmap bitmap = ((BitmapDrawable)image.getDrawable()).getBitmap();
-        byte[] image = Utility.getBytes(bitmap);
-
-       movie = new Movie(imdbId, getTitle, getPlot, image, getMin, timeStamp, getDirector, getGenre, getRating);
-
+        final EditText title = (EditText) findViewById(R.id.title);
+        final EditText director = (EditText) findViewById(R.id.director);
+        final EditText genre = (EditText) findViewById(R.id.genre);
+        final EditText min = (EditText) findViewById(R.id.min);
+        final EditText rating = (EditText) findViewById(R.id.r);
+        final EditText plot = (EditText) findViewById(R.id.plot);
 
         saveBtn = (Button) findViewById(R.id.saveBtn);
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String getTitle = title.getText().toString();
+                String getDirector = director.getText().toString();
+                String getGenre = genre.getText().toString();
+                String getMin = min.getText().toString();
+                String getRating = rating.getText().toString();
+                String getPlot = plot.getText().toString();
+
+                long ts = System.currentTimeMillis()/10000;
+                String imdbId = String.valueOf(ts);
+                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                Bitmap bitmap = ((BitmapDrawable)image.getDrawable()).getBitmap();
+                byte[] image = Utility.getBytes(bitmap);
+
+                movie = new Movie(imdbId, getTitle, getPlot, image, getMin, timeStamp, getDirector, getGenre, getRating);
                 DBManager.getInstance(MyMoviesApplication.getInstance()).addToFav(movie);
                 Toast.makeText(EditMovieActivity.this, "Movie add to favorites",Toast.LENGTH_SHORT).show();
             }
