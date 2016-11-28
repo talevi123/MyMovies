@@ -25,7 +25,7 @@ public class ApiManager {
     ///maps url
     private static final String GOOGLEAPIS_URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
     private static final String PARAM_LOCATION = "location=";
-    private static final String GOOGLEAPIS_URL_SUFFIX = "&radius=10000&type=movie_theater&key=AIzaSyATr2XSq3M131wcpRiSTMkOLNy5hcHao_M";
+    private static final String GOOGLEAPIS_URL_SUFFIX = "&radius=10000&type=movie_theater&key=AIzaSyD5anlL6tztkNRrsZK9PBiEhkuzVRsz5Ow";
 
 
     public static List<Movie> searchMovie(String title) {
